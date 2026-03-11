@@ -11,7 +11,8 @@ REST endpoints:
   POST   /api/v2/jobs/{uuid}/trigger — send event to running job (pause/resume/custom)
 
 WebSocket:
-  WS     /api/v2/jobs/{uuid}/ws   — real-time status stream for a job
+  WS     /api/v2/jobs/ws          — real-time stream for ALL running jobs
+  WS     /api/v2/jobs/{uuid}/ws   — real-time status stream for a single job
 """
 
 import json
@@ -50,7 +51,10 @@ async def list_jobs(
 
 @router.post("", response_model=schemas.Job, status_code=status.HTTP_201_CREATED)
 async def create_job(data: schemas.JobCreate, db: AsyncSession = Depends(get_db)):
-    return await service.create(db, data)
+    try:
+        return await service.create(db, data)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
 
 @router.get("/{uuid}", response_model=schemas.Job)
@@ -77,17 +81,39 @@ async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
     """
     Queue the job in the DB, call gRPC execute on the runner,
     then open a background stream to receive status updates.
+
+    If the job is already RUNNING, checks whether it is actually present on
+    the runner — if not, marks it FAILED (stale orphan detection).
     """
     from grpc_gen import job_runner_pb2
 
-    job = await service.queue_job(db, uuid)
+    job = await service.get(db, uuid)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
 
     if not job.blueprint:
         raise HTTPException(status_code=400, detail="Job has no associated blueprint")
 
-    arguments_json = json.dumps(
-        {arg.name: arg.value for arg in job.arguments}
-    )
+    # Stale orphan detection: job thinks it's RUNNING but runner has no record of it
+    if job.state == service.JobState.RUNNING:
+        try:
+            stub = get_stub()
+            running = await stub.jobs(job_runner_pb2.JobsRequest())
+            if uuid not in running.job_uuids:
+                await service.mark_failed(db, uuid)
+                raise HTTPException(
+                    status_code=409,
+                    detail=f"Job {uuid} is marked RUNNING but is not present on the runner — marked FAILED"
+                )
+        except HTTPException:
+            raise
+        except Exception as exc:
+            logger.warning("Could not check runner jobs for stale detection: %s", exc)
+
+    job = await service.queue_job(db, uuid)
+
+    # Cast argument values to their blueprint-declared types before sending
+    typed_args = service.build_typed_arguments(job)
 
     try:
         stub = get_stub()
@@ -95,9 +121,8 @@ async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
             job_runner_pb2.ExecuteRequest(
                 uuid=uuid,
                 command=f"{job.blueprint.executor}:{job.blueprint.command}",
-                arguments=arguments_json,
-                # job_url left empty — runner pushes via gRPC stream, not REST
-                job_url="",
+                arguments=json.dumps(typed_args),
+                job_url="",  # runner pushes via gRPC stream, not REST
             )
         )
     except Exception as exc:
@@ -115,11 +140,20 @@ async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
 
 @router.post("/{uuid}/abort", response_model=schemas.Job)
 async def abort_job(uuid: str, db: AsyncSession = Depends(get_db)):
+    """
+    Abort a job.
+    - NOT_STARTED: DB-only, no gRPC call needed (job never reached the runner).
+    - QUEUED / RUNNING / PAUSED: call gRPC abort then update DB.
+    """
     from grpc_gen import job_runner_pb2
 
     job = await service.get(db, uuid)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
+
+    if job.state == service.JobState.NOT_STARTED:
+        # Never sent to runner — just cancel locally
+        return await service.abort_job(db, uuid)
 
     try:
         stub = get_stub()
@@ -162,6 +196,36 @@ async def trigger_job(
 
 
 # ── WebSocket ─────────────────────────────────────────────────────────────────
+
+@router.websocket("/ws")
+async def jobs_ws_global(ws: WebSocket, db: AsyncSession = Depends(get_db)):
+    """
+    Global real-time stream — receives every job update across all running jobs.
+
+    On connect: sends the current state of every non-terminal job.
+    Then: receives push updates whenever any job changes state.
+    """
+    await manager.connect_global(ws)
+
+    # Snapshot all active (non-terminal) jobs immediately on connect
+    active = await service.get_all(
+        db,
+        limit=500,
+        states=[
+            service.JobState.QUEUED,
+            service.JobState.RUNNING,
+            service.JobState.PAUSED,
+        ],
+    )
+    for job in active:
+        await ws.send_json(schemas.Job.model_validate(job).model_dump(mode="json"))
+
+    try:
+        while True:
+            await ws.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect_global(ws)
+
 
 @router.websocket("/{uuid}/ws")
 async def job_ws(uuid: str, ws: WebSocket, db: AsyncSession = Depends(get_db)):

@@ -13,10 +13,46 @@ from datetime import datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from blueprints.models import Blueprint
 from jobs.models import Job, JobArgument, JobState
 from jobs import schemas
 
 logger = logging.getLogger(__name__)
+
+
+def cast_value(value: str, vtype: str):
+    """Cast a string argument value to the type declared in the blueprint argument."""
+    if value is None:
+        return None
+    ltype = str(vtype).lower()
+    try:
+        if ltype in ("int", "int32", "int64"):
+            return int(float(value))
+        elif ltype == "float":
+            return float(value)
+        elif ltype == "bool":
+            if str(value).lower() in ("true", "t", "yes", "y", "on", "1"):
+                return True
+            elif str(value).lower() in ("false", "f", "no", "n", "off", "0"):
+                return False
+            raise ValueError(f"Cannot cast '{value}' to bool")
+        else:
+            return str(value)
+    except (ValueError, TypeError):
+        logger.warning("Failed to cast '%s' to %s, using raw string", value, vtype)
+        return str(value)
+
+
+def build_typed_arguments(job: Job) -> dict:
+    """
+    Return the job arguments dict with values cast to their blueprint-declared types.
+    Unknown argument names fall back to raw string.
+    """
+    if not job.blueprint:
+        return {arg.name: arg.value for arg in job.arguments}
+    type_map = {bp_arg.name: bp_arg.type for bp_arg in job.blueprint.arguments}
+    return {arg.name: cast_value(arg.value, type_map.get(arg.name, "string"))
+            for arg in job.arguments}
 
 # Valid state transitions: current → set of allowed next states
 _TRANSITIONS: dict[int, set[int]] = {
@@ -60,6 +96,18 @@ async def get(db: AsyncSession, uuid: str) -> Job | None:
 
 
 async def create(db: AsyncSession, data: schemas.JobCreate) -> Job:
+    blueprint = await db.get(Blueprint, data.blueprint_uuid)
+    if not blueprint:
+        raise ValueError(f"Blueprint {data.blueprint_uuid} not found")
+
+    # Reject argument names not declared by the blueprint
+    valid_names = {bp_arg.name for bp_arg in blueprint.arguments}
+    for arg in data.arguments:
+        if valid_names and arg.name not in valid_names:
+            raise ValueError(
+                f"Argument '{arg.name}' is not defined in blueprint {data.blueprint_uuid}"
+            )
+
     job = Job(
         blueprint_uuid=data.blueprint_uuid,
         created_by=data.created_by,
@@ -91,6 +139,18 @@ async def queue_job(db: AsyncSession, uuid: str) -> Job:
         raise ValueError(f"Job {uuid} not found")
     _assert_transition(job.state, JobState.QUEUED)
     job.state = JobState.QUEUED
+    await db.commit()
+    await db.refresh(job)
+    return job
+
+
+async def mark_failed(db: AsyncSession, uuid: str) -> Job | None:
+    """Force a job to FAILED — used for stale orphan detection."""
+    job = await db.get(Job, uuid)
+    if not job:
+        return None
+    job.state = JobState.FAILED
+    job.date_finished = datetime.now(timezone.utc)
     await db.commit()
     await db.refresh(job)
     return job

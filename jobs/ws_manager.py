@@ -18,6 +18,8 @@ class JobWSManager:
     def __init__(self) -> None:
         # job_uuid → set of active WebSocket connections
         self._connections: dict[str, set[WebSocket]] = defaultdict(set)
+        # clients subscribed to all job updates
+        self._global: set[WebSocket] = set()
 
     async def connect(self, job_uuid: str, ws: WebSocket) -> None:
         await ws.accept()
@@ -30,23 +32,40 @@ class JobWSManager:
             del self._connections[job_uuid]
         logger.debug("WS disconnect: job=%s", job_uuid)
 
+    async def connect_global(self, ws: WebSocket) -> None:
+        await ws.accept()
+        self._global.add(ws)
+        logger.debug("WS global connect: total=%d", len(self._global))
+
+    def disconnect_global(self, ws: WebSocket) -> None:
+        self._global.discard(ws)
+        logger.debug("WS global disconnect: total=%d", len(self._global))
+
     async def broadcast(self, job_uuid: str, data: dict) -> None:
-        """Send data to all clients watching a job. Dead connections are pruned."""
-        connections = list(self._connections.get(job_uuid, []))
-        if not connections:
+        """Send data to per-job clients and all global subscribers."""
+        targets = list(self._connections.get(job_uuid, [])) + list(self._global)
+        if not targets:
             return
 
-        dead: set[WebSocket] = set()
+        dead_job: set[WebSocket] = set()
+        dead_global: set[WebSocket] = set()
+        job_set = self._connections.get(job_uuid, set())
+
         results = await asyncio.gather(
-            *[ws.send_json(data) for ws in connections],
+            *[ws.send_json(data) for ws in targets],
             return_exceptions=True,
         )
-        for ws, result in zip(connections, results):
+        for ws, result in zip(targets, results):
             if isinstance(result, Exception):
-                dead.add(ws)
+                if ws in job_set:
+                    dead_job.add(ws)
+                else:
+                    dead_global.add(ws)
 
-        for ws in dead:
+        for ws in dead_job:
             self.disconnect(job_uuid, ws)
+        for ws in dead_global:
+            self.disconnect_global(ws)
 
     async def broadcast_all(self, data: dict) -> None:
         """Broadcast to every connected client across all jobs."""

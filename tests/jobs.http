@@ -1,0 +1,232 @@
+### Jobs API v2 Tests
+# Environment variables defined in .vscode/settings.json
+# local: http://localhost:8000
+# rig:   http://172.16.24.10:8000
+#
+# @name variables below capture response data for chained requests.
+
+
+### ── Blueprints ──────────────────────────────────────────────────────────────
+
+### List all blueprints
+GET {{baseUrl}}:5000/api/v2/blueprints
+Accept: application/json
+
+
+### Get a specific blueprint (set_mode — has string arg)
+GET {{baseUrl}}:5000/api/v2/blueprints/9dd0a09a-1153-4805-846b-eda1e2a74544
+Accept: application/json
+
+
+### Get a specific blueprint (operate_finger_latch — has string + int32 args)
+GET {{baseUrl}}:5000/api/v2/blueprints/0158ce08-bbd9-4f1d-b505-8e60629f1d3a
+Accept: application/json
+
+
+### ── Jobs ─────────────────────────────────────────────────────────────────────
+
+### List all jobs
+GET {{baseUrl}}:5000/api/v2/jobs
+Accept: application/json
+
+
+### List jobs with state filter (QUEQUEUED=1)
+GET {{baseUrl}}:5000/api/v2/jobs?state=1
+Accept: application/json
+
+
+### List jobs with state filter (RUNNING=2, PAUSED=3)
+GET {{baseUrl}}:5000/api/v2/jobs?state=2&state=3
+Accept: application/json
+
+
+### List jobs from sequence number
+GET {{baseUrl}}:5000/api/v2/jobs?from_sequence_number=1&limit=20
+Accept: application/json
+
+
+### ── Create jobs from blueprint ──────────────────────────────────────────────
+
+### Create job: init_all (no arguments)
+# @name createJobNoArgs
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "86eb9683-3aca-475d-8b78-5c8f9caba17f",
+  "created_by": "test",
+  "arguments": [],
+  "assets": {},
+  "tags": []
+}
+
+
+### Create job: set_mode (single string argument)
+# @name createJobStringArg
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "9dd0a09a-1153-4805-846b-eda1e2a74544",
+  "created_by": "test",
+  "arguments": [
+    { "name": "mode", "value": "actin" }
+  ],
+  "assets": {},
+  "tags": ["Wrench", "TopDrive"]
+}
+
+
+### Create job: virtual_trip_in_stand (string argument)
+# @name createJobTripIn
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "07c7f536-f5b0-465a-8db6-6d9bf3c39a4b",
+  "created_by": "test",
+  "arguments": [
+    { "name": "group_id", "value": "1" }
+  ],
+  "assets": {},
+  "tags": []
+}
+
+
+### Create job: operate_finger_latch (string + int32 arguments)
+# @name createJobMixedArgs
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "0158ce08-bbd9-4f1d-b505-8e60629f1d3a",
+  "created_by": "test",
+  "arguments": [
+    { "name": "operation", "value": "open" },
+    { "name": "finger_latch_id", "value": "5" }
+  ],
+  "assets": { "device": "iracker-1" },
+  "tags": ["iRacker"]
+}
+
+
+### Create job: hung_threads_recovery (two string arguments)
+# @name createJobTwoArgs
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "fa9a304c-ce37-4915-9d31-9362fdd737e3",
+  "created_by": "test",
+  "arguments": [
+    { "name": "mode", "value": "dry" },
+    { "name": "group_id", "value": "2" }
+  ],
+  "assets": {},
+  "tags": []
+}
+
+
+### Create job: invalid argument name (expect 400)
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "9dd0a09a-1153-4805-846b-eda1e2a74544",
+  "created_by": "test",
+  "arguments": [
+    { "name": "nonexistent_arg", "value": "value" }
+  ],
+  "assets": {},
+  "tags": []
+}
+
+
+### Create job: blueprint not found (expect 400)
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "00000000-0000-0000-0000-000000000000",
+  "created_by": "test",
+  "arguments": [],
+  "assets": {},
+  "tags": []
+}
+
+
+### ── Get / delete a specific job ─────────────────────────────────────────────
+
+### Get job by UUID (replace with UUID from a create response above)
+GET {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c
+Accept: application/json
+
+
+### Delete job (only allowed when NOT_STARTED or terminal)
+DELETE {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c
+
+
+### ── Run / abort / trigger ───────────────────────────────────────────────────
+
+### Run job (queue → execute on runner)
+POST {{baseUrl}}:5000/api/v2/jobs/e10699a5-4ac9-4bab-9ab9-cad6374e206c/run
+Content-Type: application/json
+
+
+### Abort job
+POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/abort
+Content-Type: application/json
+
+
+### Trigger event: pause
+POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/trigger
+Content-Type: application/json
+
+{
+  "event": "pause",
+  "arguments": {}
+}
+
+
+### Trigger event: resume
+POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/trigger
+Content-Type: application/json
+
+{
+  "event": "resume",
+  "arguments": {}
+}
+
+
+### Trigger custom event with arguments
+POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/trigger
+Content-Type: application/json
+
+{
+  "event": "manual_confirmation_complete",
+  "arguments": { "confirmed": true }
+}
+
+
+### ── WebSocket — global stream (all running jobs) ────────────────────────────
+# WebSocket endpoints cannot be tested with HTTP request files.
+# Use wscat, websocat, or a browser console:
+#
+#   wscat  -c ws://localhost:8000/api/v2/jobs/ws
+#   websocat ws://localhost:8000/api/v2/jobs/ws
+#
+# On connect you receive a snapshot of every QUEUED/RUNNING/PAUSED job as
+# individual JSON messages. After that, every state change for any job is
+# pushed automatically.
+#
+# Send any text (e.g. "ping") to keep the connection alive.
+
+
+### ── WebSocket — per-job stream ──────────────────────────────────────────────
+# Subscribe to a single job:
+#
+#   wscat  -c ws://localhost:8000/api/v2/jobs/{{jobUuid}}/ws
+#   websocat ws://localhost:8000/api/v2/jobs/{{jobUuid}}/ws
+#
+# On connect you receive the full current job state once, then get pushed
+# updates until the job reaches a terminal state or you disconnect.
