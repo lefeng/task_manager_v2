@@ -1,0 +1,460 @@
+[
+  {
+    "uuid": "86eb9683-3aca-475d-8b78-5c8f9caba17f",
+    "description": "Initialization",
+    "executor": "rig.service",
+    "command": "init",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "cb5ab0f5-bf9a-4a91-8707-a9915e308402",
+    "description": "Clean all the PHSGs",
+    "executor": "rig.service",
+    "command": "clean_all_phsgs",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "ab0c027b-d45e-4ef2-915b-87a0d3a332db",
+    "description": "Move stand into setback virtually",
+    "executor": "rig.service",
+    "command": "virtually_move_stand_to_setback",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "00f07145-3489-4b81-b94f-83a8f799e220",
+    "description": "Move stand out of setback virtually",
+    "executor": "rig.service",
+    "command": "virtually_move_stand_to_storage",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "32bfb5a1-433e-4df9-9b29-c39781ecacc7",
+    "description": "Self test",
+    "executor": "rig.rph",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph"
+    ]
+  },
+  {
+    "uuid": "7bd848ea-7434-401c-8aad-31b15ee0ebaa",
+    "description": "Park dw",
+    "executor": "rig.rph",
+    "command": "park_dw",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph"
+    ]
+  },
+  {
+    "uuid": "15ff0f9c-48a0-4a03-bb03-0110fd0812d7",
+    "description": "Park vd",
+    "executor": "rig.rph",
+    "command": "park_vd",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph"
+    ]
+  },
+  {
+    "uuid": "90224248-f74f-4478-a14a-61a67ef64f65",
+    "description": "Park back",
+    "executor": "rig.rph",
+    "command": "park_back",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph"
+    ]
+  },
+  {
+    "uuid": "8103a316-badc-4d1f-872e-5ba7a492fb52",
+    "description": "Trip in stand from setback",
+    "executor": "rig.trip_stand",
+    "command": "trip_in_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      },
+      {
+        "name": "deliver_to",
+        "description": "Select weight transfer to stickup or elevator",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "stickup",
+            "elevator"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  },
+  {
+    "uuid": "8945714b-8523-4114-9d78-94fae5a05e7c",
+    "description": "Trip out stand to setback",
+    "executor": "rig.trip_stand",
+    "command": "trip_out_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  },
+  {
+    "uuid": "628c6ab6-41bd-4cf3-aac3-ebe70d988235",
+    "description": "Retrieve stand from setback",
+    "executor": "rig.trip_stand",
+    "command": "retrieve_sb",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  },
+  {
+    "uuid": "4cd78d11-f538-459e-a835-28631d660efc",
+    "description": "Deliver stand to well center",
+    "executor": "rig.trip_stand",
+    "command": "deliver_wc",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      },
+      {
+        "name": "deliver_to",
+        "description": "Select weight transfer to stickup or elevator",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "stickup",
+            "elevator"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  },
+  {
+    "uuid": "0630080b-28f3-4f5a-a572-4bbacd7f0542",
+    "description": "Retrieve stand from well center",
+    "executor": "rig.trip_stand",
+    "command": "retrieve_wc",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  },
+  {
+    "uuid": "24f5f9c4-ffbb-48e9-a412-25220cde1de1",
+    "description": "Deliver stand to setback",
+    "executor": "rig.trip_stand",
+    "command": "deliver_sb",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  },
+  {
+    "uuid": "6e717818-bdc7-4d7b-a502-fea65f05d423",
+    "description": "Trip in single dp from horizontal",
+    "executor": "rig.trip_single",
+    "command": "trip_in_single_dp",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "type",
+        "description": "Type 1 (5 inch), Type 2 (5 7/8 inch)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "type_1",
+            "type_2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_single"
+    ]
+  },
+  {
+    "uuid": "92b2f98a-a4c2-4721-bcd9-f79628dee459",
+    "description": "Trip out single dp to horizontal",
+    "executor": "rig.trip_single",
+    "command": "trip_out_single_dp",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "type",
+        "description": "Type 1 (5 inch), Type 2 (5 7/8 inch)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "type_1",
+            "type_2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_single"
+    ]
+  },
+  {
+    "uuid": "74fe0f0a-fad9-4571-a2c5-618afdcffa55",
+    "description": "Retrieve single pipe from catwalk",
+    "executor": "rig.trip_single",
+    "command": "retrieve_dp_horizontal",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "type",
+        "description": "Type 1 (5 inch), Type 2 (5 7/8 inch)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "type_1",
+            "type_2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_single"
+    ]
+  },
+  {
+    "uuid": "fd9cec4f-cfe8-4d29-8130-ddac6bd41675",
+    "description": "Deliver single pipe to well center",
+    "executor": "rig.trip_single",
+    "command": "deliver_dp_wc",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "type",
+        "description": "Type 1 (5 inch), Type 2 (5 7/8 inch)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "type_1",
+            "type_2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_single"
+    ]
+  },
+  {
+    "uuid": "22efbde6-e854-4ddc-878d-3ea3b3b55539",
+    "description": "Retrieve single pipe from well center",
+    "executor": "rig.trip_single",
+    "command": "retrieve_dp_wc",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "type",
+        "description": "Type 1 (5 inch), Type 2 (5 7/8 inch)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "type_1",
+            "type_2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_single"
+    ]
+  },
+  {
+    "uuid": "0d2698cf-3328-4c38-ad37-fea07daf58bd",
+    "description": "Deliver single pipe to catwalk",
+    "executor": "rig.trip_single",
+    "command": "deliver_dp_horizontal",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "type",
+        "description": "Type 1 (5 inch), Type 2 (5 7/8 inch)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "type_1",
+            "type_2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_single"
+    ]
+  }
+]

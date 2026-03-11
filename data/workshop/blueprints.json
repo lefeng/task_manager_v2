@@ -1,0 +1,178 @@
+[
+  {
+    "uuid": "eaab02e4-f4d5-4555-9967-996ba59577ca",
+    "description": "Run prompt tester",
+    "executor": "rig.test",
+    "command": "prompt_tester",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "testing"
+    ]
+  },
+  {
+    "uuid": "37830973-48d0-450c-9abd-cd5d9d988d64",
+    "description": "Run selector tester one",
+    "executor": "rig.test",
+    "command": "selector_test_success",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "testing"
+    ]
+  },
+  {
+    "uuid": "a015a019-2806-4bd2-b258-a445c6d26126",
+    "description": "Run selector tester with failure",
+    "executor": "rig.test",
+    "command": "selector_test_fail",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "testing"
+    ]
+  },
+  {
+    "uuid": "cf971827-759c-419f-9fed-d43412aded45",
+    "description": "Run the repeat decorator wrapping a promptselector",
+    "executor": "rig.test",
+    "command": "repeat_tester",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "testing"
+    ]
+  },
+  {
+    "uuid": "a2e22578-c131-4a74-a0d8-066f2f810125",
+    "description": "RRN: switch dies",
+    "executor": "rig.rrn",
+    "command": "switch_dies",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dies_id",
+        "description": "RRN dies id",
+        "type": "double"
+      }
+    ],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "5e436e84-65ad-4460-958e-9acb659f6040",
+    "description": "RRN: park",
+    "executor": "rig.rrn",
+    "command": "park",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "d1312df7-4f58-44a9-ad9a-8d515aaf91b5",
+    "description": "RRN: self test",
+    "executor": "rig.rrn",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "5de1cd3c-3edb-48eb-80a6-ae9430e1997f",
+    "description": "RRN: warm up",
+    "executor": "rig.rrn",
+    "command": "warm_up",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "3ec5b238-2567-436c-b2ae-91ed294cb223",
+    "description": "RRN: stress test",
+    "executor": "rig.stress_test",
+    "command": "rrn_stress_test",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_makeup_torque",
+        "description": "Makeup torque [kNm]",
+        "type": "double"
+      }
+    ],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "064dadff-c0d7-44ea-bd8f-ba76ec0e4e71",
+    "description": "RRN: move to WC",
+    "executor": "rig.rrn",
+    "command": "move_to_wc",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "e14ef3ce-3d21-4816-b54c-4c10c2229b32",
+    "description": "RRN: clamp",
+    "executor": "rig.rrn",
+    "command": "clamp",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "49527d02-3199-4360-aa15-3d24e28be3a8",
+    "description": "RRN: makeup sequence standalone",
+    "executor": "rig.rrn",
+    "command": "makeup_sequence_standalone",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_makeup_torque",
+        "description": "Makeup torque [0-150 kNm]",
+        "type": "double"
+      }
+    ],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "df29e7c1-9aed-4d90-8dad-02eb131d2517",
+    "description": "RRN: breakout sequence standalone",
+    "executor": "rig.rrn",
+    "command": "breakout_sequence_standalone",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_breakout_torque",
+        "description": "Breakout torque [0-250 kNm]",
+        "type": "double"
+      }
+    ],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  }
+]

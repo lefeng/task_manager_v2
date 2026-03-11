@@ -1,0 +1,11 @@
+  {
+    "uuid": "aeeb7a42-d7bb-4d8a-b533-79151a3cf4e0",
+    "description": "Move iRacker to rig walk position",
+    "executor": "rig.iracker",
+    "command": "move_to_rig_walk_position",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  }

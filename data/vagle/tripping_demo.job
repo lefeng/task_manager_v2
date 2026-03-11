@@ -1,0 +1,14 @@
+9f2e28e2-a202-4065-8eeb-e7a6da2edeb4,
+9f2e28e2-a202-4065-8eeb-e7a6da2edeb6,
+9f2e28e2-a202-4065-8eeb-e7a6da2edeb7,
+fd739a50-0eea-4145-9cb7-4a265aa5b24d,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0023,dope_seq:none,connection_makeup_torque:60
+fd739a50-0eea-4145-9cb7-4a265aa5b24d,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0032,dope_seq:full,connection_makeup_torque:60
+2fb7311e-5fa0-4e0c-a0cd-037ee4db8365,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0041,dope_seq:full,connection_makeup_torque:60
+2fb7311e-5fa0-4e0c-a0cd-037ee4db8365,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0042,dope_seq:none,connection_makeup_torque:60
+9f2e28e2-a202-4065-8eeb-e7a6da2edeb4,
+9f2e28e2-a202-4065-8eeb-e7a6da2edeb6,
+9f2e28e2-a202-4065-8eeb-e7a6da2edeb7,
+2fb7311e-5fa0-4e0c-a0cd-037ee4db8366,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0042,holder_uuid:8d0f97e7-9a8e-4641-9d65-bbadf2e99f42,wet:false,connection_breakout_torque:80
+2fb7311e-5fa0-4e0c-a0cd-037ee4db8366,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0041,holder_uuid:8d0f97e7-9a8e-4641-9d65-bbadf2e99f41,wet:false,connection_breakout_torque:80
+1087466b-b4b9-4d30-8c47-f36de1a3ba88,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0032,holder_uuid:d90c872c-a635-4448-8038-ec825c5bb634,wet:false,connection_breakout_torque:80
+1087466b-b4b9-4d30-8c47-f36de1a3ba88,object_uuid:5bfc65fb-bbce-47b4-bf59-068de40d0023,holder_uuid:d90c872c-a635-4448-8038-ec825c5bb614,wet:false,connection_breakout_torque:80

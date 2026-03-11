@@ -1,0 +1,271 @@
+[
+  {
+    "uuid": "8f824f24-c295-48cd-a836-236b54e5fa99",
+    "description": "Trip in stand from racking board",
+    "executor": "rig.simulation",
+    "command": "trip_in_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope",
+        "description": "Select dope mode",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand)), 3 (ods collar), 4 (ds collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "ee061959-ed3c-469b-b958-24e40a6cd639",
+    "description": "Trip out stand to racking board",
+    "executor": "rig.simulation",
+    "command": "trip_out_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "mode",
+        "description": "Dry, Wet",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "dry",
+            "wet"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group: ODS(1), DS(2), ODS collar(3), DS collar(4)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "b95437d4-48f9-43cd-acb0-5ac05293a6e5",
+    "description": "Drill connection",
+    "executor": "rig.simulation",
+    "command": "drill_connection",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group: ODS(1), DS(2), ODS collar(3), DS collar(4)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      },
+      {
+        "name": "need_break_out",
+        "description": "Select if top drive needs to break out the connection",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "true",
+            "false"
+          ]
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "7269b69a-cb95-4c21-a175-25d5eca141eb",
+    "description": "Build a full stand and deliver to quill, elevator or racking board",
+    "executor": "rig.simulation",
+    "command": "build_a_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode. HWDP will always dope and regrip.",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      },
+      {
+        "name": "destination",
+        "description": "Select destination",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "quill",
+            "elevator",
+            "racking_board"
+          ]
+        }
+      },
+      {
+        "name": "need_break_out",
+        "description": "Top drive needs to break out if deliver to well center?",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "true",
+            "false"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand)) if deliver to racking board",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "724844f0-453f-4e55-a866-b7681b022191",
+    "description": "Lay down a full stand from racking board",
+    "executor": "rig.simulation",
+    "command": "lay_down_a_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "957de2c7-4e23-4fec-89ec-0b2ce0dc2be4",
+    "description": "Trip in a pipe from CatWalk to Well Center",
+    "executor": "rig.simulation",
+    "command": "trip_in_single",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "50cdfdd1-5ebd-4def-8d15-9b063213e671",
+    "description": "Trip out a pipe from Well Center to CatWalk",
+    "executor": "rig.simulation",
+    "command": "trip_out_single",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  }
+]

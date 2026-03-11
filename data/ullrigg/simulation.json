@@ -1,0 +1,68 @@
+[
+  {
+    "uuid": "8f824f24-c295-48cd-a836-236b54e5fa99",
+    "description": "Trip in stand from setback",
+    "executor": "rig.simulation",
+    "command": "trip_in_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      },
+      {
+        "name": "deliver_to",
+        "description": "Select weight transfer to stickup or elevator",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "stickup",
+            "elevator"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  },
+  {
+    "uuid": "ee061959-ed3c-469b-b958-24e40a6cd639",
+    "description": "Trip out stand to setback",
+    "executor": "rig.simulation",
+    "command": "trip_out_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (dw stand), 2 (vd stand)), 3 (dw collar), 4 (vd collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "trip_stand"
+    ]
+  }
+]

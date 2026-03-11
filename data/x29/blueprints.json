@@ -1,0 +1,975 @@
+[
+  {
+    "uuid": "86eb9683-3aca-475d-8b78-5c8f9caba17f",
+    "description": "Initialize all robots",
+    "executor": "rig.service",
+    "command": "init_all",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "9dd0a09a-1153-4805-846b-eda1e2a74544",
+    "description": "Switch Actin/PLC mode for Wrench TopDrive CatWalk",
+    "executor": "rig.service",
+    "command": "set_mode",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "mode",
+        "description": "Actin, PLC",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "actin",
+            "plc"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "07c7f536-f5b0-465a-8db6-6d9bf3c39a4b",
+    "description": "Virtual trip in stand",
+    "executor": "rig.service",
+    "command": "virtual_trip_in_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "storage"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "d27232ba-30a7-4f29-8f56-80cf5b9a8a51",
+    "description": "Virtual trip out stand",
+    "executor": "rig.service",
+    "command": "virtual_trip_out_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "storage"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "308d3b61-cc63-4066-9183-9c29c2dfce0e",
+    "description": "Auto make up",
+    "executor": "rig.service",
+    "command": "auto_make_up",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "b0c4d8e9-65b6-42c5-be22-1fc46a7e056a",
+    "description": "Auto break out",
+    "executor": "rig.service",
+    "command": "auto_break_out",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "0e11e16d-167c-451d-80ff-c642aed7a905",
+    "description": "Weight transfer from quill to slips",
+    "executor": "rig.service",
+    "command": "weight_transfer_to_slips_from_drill",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "fa9a304c-ce37-4915-9d31-9362fdd737e3",
+    "description": "Hung threads recovery",
+    "executor": "rig.service",
+    "command": "hung_threads_recovery",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "mode",
+        "description": "Dry, Wet",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "dry",
+            "wet"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "ade4f511-696a-4428-bfda-2435833f2ff6",
+    "description": "Self test drill floor arm",
+    "executor": "rig.drill_floor_arm",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "233eaa5e-1446-4733-ace2-19a055585341",
+    "description": "Switch to pipe guide tool",
+    "executor": "rig.drill_floor_arm",
+    "command": "switch_to_pipe_guide",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "64137128-564b-4ac8-81a6-ef21db32d6fa",
+    "description": "Switch to mud bucket tool",
+    "executor": "rig.drill_floor_arm",
+    "command": "switch_to_mud_bucket",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "62908ac1-31de-4e00-81ad-0684aa5937a3",
+    "description": "Open the tool (pipe guide or mud bucket)",
+    "executor": "rig.drill_floor_arm",
+    "command": "open_tool",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "a9664e51-3b3a-4050-a8ec-9d64d9266162",
+    "description": "Close the tool (pipe guide or mud bucket)",
+    "executor": "rig.drill_floor_arm",
+    "command": "close_tool",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "82d5fc71-3d1b-40d4-a863-08de3f173c69",
+    "description": "Go to WC and enable manual jog",
+    "executor": "rig.drill_floor_arm",
+    "command": "move_to_wc",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "04b85204-b8db-4688-958a-3051ce7e2ba1",
+    "description": "Go to park position",
+    "executor": "rig.drill_floor_arm",
+    "command": "park",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "2c036999-ddb5-49ed-a70b-c55a8d9b287a",
+    "description": "Move to switch tool position and close tool",
+    "executor": "rig.drill_floor_arm",
+    "command": "switch_tool_position",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "d709c61b-cdfe-4721-b4d4-c5303430e560",
+    "description": "Manual jog",
+    "executor": "rig.drill_floor_arm",
+    "command": "manual_jog",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm"
+    ]
+  },
+  {
+    "uuid": "156724ae-bcf0-4b81-9396-6dd2de99fb7f",
+    "description": "Move stand inside racking board",
+    "executor": "rig.iracker",
+    "command": "move_stand_inside_racking_board",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "0692f730-d497-4605-a463-a593a8e3decd",
+    "description": "Move iRacker to ready position",
+    "executor": "rig.iracker",
+    "command": "move_to_ready_position",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "aeeb7a42-d7bb-4d8a-b533-79151a3cf4e0",
+    "description": "Move iRacker to rig walk position",
+    "executor": "rig.iracker",
+    "command": "move_to_rig_walk_position",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "2064c7c6-d0c0-4b41-98bc-7993bda1c1e2",
+    "description": "Move iRacker to park position",
+    "executor": "rig.iracker",
+    "command": "move_to_park_position",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "3a221538-fdb6-4f78-9d99-362a8bdd509a",
+    "description": "Self test iRacker",
+    "executor": "rig.iracker",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "9b71b26e-98ff-4c27-b7e2-72978965a410",
+    "description": "Self test iRacker grippers",
+    "executor": "rig.iracker",
+    "command": "self_test_grippers",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "9d3b1967-5af2-4bc6-892c-7f48317b199a",
+    "description": "Manual jog",
+    "executor": "rig.iracker",
+    "command": "manual_jog",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "0158ce08-bbd9-4f1d-b505-8e60629f1d3a",
+    "description": "Operate finger latch",
+    "executor": "rig.iracker",
+    "command": "operate_finger_latch",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "operation",
+        "description": "Select open or close operation",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "open",
+            "close"
+          ]
+        }
+      },
+      {
+        "name": "finger_latch_id",
+        "description": "Finger latch ID (1-24)",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "b511a92c-e5f1-4604-898c-2aa267383f77",
+    "description": "Operate storm gates",
+    "executor": "rig.iracker",
+    "command": "operate_storm_gates",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "operation",
+        "description": "Select open or close operation",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "open",
+            "close"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "87d22b23-6a5c-48d6-b002-dc8093b0e409",
+    "description": "Retrieve from racking board",
+    "executor": "rig.iracker",
+    "command": "retrieve_racking_board_stand_alone",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope",
+        "description": "Select dope mode",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "cbe3fb40-53fd-4cc5-b226-281685bf140f",
+    "description": "Deliver well center",
+    "executor": "rig.iracker",
+    "command": "deliver_wc",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "5a858fec-4f13-42e9-8326-418a98fd52b0",
+    "description": "Retrieve from well center",
+    "executor": "rig.iracker",
+    "command": "retrieve_wc",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "crossover",
+        "description": "When crossover is selected, iRacker will retrieve the crossover and the stand on top of it",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "false",
+            "true"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "b9e71878-64ff-45b2-a5d0-1e7916bcade8",
+    "description": "Deliver to racking board",
+    "executor": "rig.iracker",
+    "command": "deliver_racking_board",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "8103a316-badc-4d1f-872e-5ba7a492fb52",
+    "description": "Trip in stand from racking board",
+    "executor": "rig.trip_stand",
+    "command": "trip_in_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope",
+        "description": "Select dope mode",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "8945714b-8523-4114-9d78-94fae5a05e7c",
+    "description": "Trip out stand to racking board",
+    "executor": "rig.trip_stand",
+    "command": "trip_out_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "mode",
+        "description": "Dry, Wet",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "dry",
+            "wet"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "0e556d17-7add-4c06-a3ac-fe1c5ddbbe44",
+    "description": "Trip in a pipe from CatWalk to Well Center",
+    "executor": "rig.trip_single",
+    "command": "trip_in_single",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "53864129-759b-4520-9efc-5e24904d5751",
+    "description": "Trip out a pipe from Well Center to CatWalk",
+    "executor": "rig.trip_single",
+    "command": "trip_out_single",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "b8db1cd9-605f-420a-8c52-c39806188682",
+    "description": "Drill connection",
+    "executor": "rig.drill_connection",
+    "command": "drill_connection",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      },
+      {
+        "name": "need_break_out",
+        "description": "Select if top drive needs to break out the connection",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "true",
+            "false"
+          ]
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "dbf93a06-18bb-40c1-b127-f046bea321bf",
+    "description": "Step 1: Handle the bottom pipe",
+    "executor": "rig.build_stand",
+    "command": "handle_first_pipe",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "CatWalk",
+      "Wrench"
+    ]
+  },
+  {
+    "uuid": "b6313a80-4a5e-4c45-94b7-5e532d8143c1",
+    "description": "Step 2: Handle the middle pipe",
+    "executor": "rig.build_stand",
+    "command": "handle_second_pipe",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode. HWDP will always dope and regrip.",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "CatWalk",
+      "Wrench"
+    ]
+  },
+  {
+    "uuid": "73a450be-1a8f-49d7-a650-40b737f98afc",
+    "description": "Step 3: Handle the top pipe",
+    "executor": "rig.build_stand",
+    "command": "handle_third_pipe",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode. HWDP will always dope and regrip.",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "CatWalk",
+      "Wrench"
+    ]
+  },
+  {
+    "uuid": "1574b325-8e58-4ec2-abc3-644fc82bd478",
+    "description": "Step 4: Deliver new stand to racking board or well center",
+    "executor": "rig.build_stand",
+    "command": "deliver_new_stand",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "28319e14-9035-4cbd-b4ab-417523ba24e0",
+    "description": "Build a full stand and deliver to racking board or well center",
+    "executor": "rig.build_stand",
+    "command": "build_a_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode. HWDP will always dope and regrip.",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "7133ec84-d0aa-4506-b7f6-54c3db74ce0f",
+    "description": "Step 1: Retrieve a stand from racking board and move to mouse hole",
+    "executor": "rig.lay_down_pipes",
+    "command": "move_stand_to_mh",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "ed75b30f-460a-4e61-9362-572c410d511b",
+    "description": "Step 2: Lay down the top pipe",
+    "executor": "rig.lay_down_pipes",
+    "command": "handle_pipe_on_the_top",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "6f68e3c7-29f6-4a4e-ab33-186c47269adc",
+    "description": "Step 3: Lay down the middle pipe",
+    "executor": "rig.lay_down_pipes",
+    "command": "handle_pipe_in_the_middle",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "097d7324-cf39-4e32-a625-6f387501a660",
+    "description": "Step 4: Lay down the bottom pipe",
+    "executor": "rig.lay_down_pipes",
+    "command": "handle_pipe_at_the_bottom",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "723d2b99-dd6c-48d6-947e-45b8b030d37c",
+    "description": "Lay down a full stand from racking board",
+    "executor": "rig.lay_down_pipes",
+    "command": "lay_down_a_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "95714a92-b687-414c-89ee-3ea8fb5c78b3",
+    "description": "Trip in drill collar from racking board",
+    "executor": "rig.drill_collar",
+    "command": "trip_in_dc",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (3 (ods collar), 4 (ds collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "e8eb3a57-c64b-4475-ba72-fbbe06d0312d",
+    "description": "Trip out drill collar to racking board",
+    "executor": "rig.drill_collar",
+    "command": "trip_out_dc",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (3 (ods collar), 4 (ds collar)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "36478164-cff5-439a-988d-fd13b6f5cab2",
+    "description": "Backreaming (Driller operates top drive, Jobrunner controls DFA, Wrench and iRacker)",
+    "executor": "rig.backream",
+    "command": "backream",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  }
+]

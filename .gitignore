@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+*.c
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Python Environment
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Database files
+*.sqlite3
+*.db
+
+# Logs and other generated files
+logs/
+*.log
+*.csv
+*.html
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Data files
+*.dat
+*.mat
+*.csv
+data/img/
+data/ecs/*.ecs
+
+# Misc
+.DS_Store
+Thumbs.db

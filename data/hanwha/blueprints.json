@@ -1,0 +1,120 @@
+[
+  {
+    "uuid": "86eb9683-3aca-475d-8b78-5c8f9caba17f",
+    "description": "Initialize all robots",
+    "executor": "rig.service",
+    "command": "init_all",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DFR",
+      "RPH1",
+      "RRN1",
+      "RDM1",
+      "PDH",
+      "PMH",
+      "RPH2",
+      "RRN2",
+      "RDM2"
+    ]
+  },
+  {
+    "uuid": "5af3a750-8d40-4af0-9c42-39dd6f7163c0",
+    "description": "Self test all robots",
+    "executor": "rig.service",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DFR",
+      "RPH1",
+      "RRN1",
+      "RDM1",
+      "PDH",
+      "PMH",
+      "RPH2",
+      "RRN2",
+      "RDM2"
+    ]
+  },
+  {
+    "uuid": "8103a316-badc-4d1f-872e-5ba7a492fb52",
+    "description": "Trip in stand from setback",
+    "executor": "rig.trip_stand",
+    "command": "trip_in_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope",
+        "description": "Select dope mode",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "RPH1",
+      "RRN1",
+      "RDM1"
+    ]
+  },
+  {
+    "uuid": "8945714b-8523-4114-9d78-94fae5a05e7c",
+    "description": "Trip out stand to setback",
+    "executor": "rig.trip_stand",
+    "command": "trip_out_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "mode",
+        "description": "Dry, Wet",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "dry",
+            "wet"
+          ]
+        }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "RPH1",
+      "RRN1",
+      "RDM1"
+    ]
+  }
+]

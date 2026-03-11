@@ -4,20 +4,19 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import settings
-from core.database import engine, Base
+from core.database import engine
 from core.grpc_client import grpc_lifespan
 from blueprints.router import router as blueprints_router
 from jobs.router import router as jobs_router
 
-# Import models so SQLAlchemy registers them before create_all
+# Import models so SQLAlchemy is aware of them (needed by Alembic autogenerate)
 import blueprints.models  # noqa: F401
 import jobs.models  # noqa: F401
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # Schema is created by scripts/setup_db.py — run it once before starting.
     async with grpc_lifespan():
         yield
     await engine.dispose()

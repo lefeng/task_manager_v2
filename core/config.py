@@ -8,7 +8,7 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
-    database_url: str = "postgresql+asyncpg://taskman:taskman@localhost:5432/taskman"
+    database_url: str = "postgresql+asyncpg://ipc:dreamteam@localhost:5432/taskman"
     runner_grpc_addr: str = "localhost:50051"
     cors_origins: list[str] = ["*"]
     host: str = "0.0.0.0"

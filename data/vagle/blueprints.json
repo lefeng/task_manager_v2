@@ -1,0 +1,1455 @@
+[
+  {
+    "uuid": "eaab02e4-f4d5-4555-9967-996ba59577ca",
+    "description": "Run prompt tester",
+    "executor": "test.test",
+    "command": "prompt_tester",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "Test"
+    ]
+  },
+  {
+    "uuid": "37830973-48d0-450c-9abd-cd5d9d988d64",
+    "description": "Run selector tester one",
+    "executor": "test.test",
+    "command": "selector_test_success",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "Test"
+    ]
+  },
+  {
+    "uuid": "a015a019-2806-4bd2-b258-a445c6d26126",
+    "description": "Run selector tester with failure",
+    "executor": "test.test",
+    "command": "selector_test_fail",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "Test"
+    ]
+  },
+  {
+    "uuid": "cf971827-759c-419f-9fed-d43412aded45",
+    "description": "Run the repeat decorator wrapping a promptselector",
+    "executor": "test.test",
+    "command": "repeat_tester",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "Test"
+    ]
+  },
+  {
+    "uuid": "47b46bfb-7f63-42c1-8661-11fe2ee7c792",
+    "description": "DFR: park left",
+    "executor": "rig.dfr",
+    "command": "park_left",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "fafcab00-f454-43e3-9252-ca5380f9106d",
+    "description": "DFR: park right",
+    "executor": "rig.dfr",
+    "command": "park_right",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "fdd2fc39-fb9a-40bb-8ed5-ff5fc761a82e",
+    "description": "DFR: self test",
+    "executor": "rig.dfr",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "88c940f3-faf4-4951-a659-0a92889b2a7f",
+    "description": "DFR: move inside object magazine",
+    "executor": "rig.dfr",
+    "command": "move_object",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "8f8a4684-bf95-41bd-b368-7a5eda1ff588",
+    "description": "DFR: dock RTSG",
+    "executor": "rig.dfr",
+    "command": "dock_rtsg",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "0f4e2869-5ace-4895-8588-d847840765d2",
+    "description": "DFR: undock RTSG",
+    "executor": "rig.dfr",
+    "command": "undock_rtsg",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "f4241207-6996-4e85-ba38-7a87d3aaf249",
+    "description": "DFR: dock RTMB",
+    "executor": "rig.dfr",
+    "command": "dock_rtmb",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "9971523e-3601-4e0d-b9e7-2635f9a26ecb",
+    "description": "DFR: undock RTMB",
+    "executor": "rig.dfr",
+    "command": "undock_rtmb",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "016c8bd1-fb5f-4655-8011-3836c138e25c",
+    "description": "DFR: trip in",
+    "executor": "rig.dfr",
+    "command": "trip_in",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "5bb34f73-f694-4aff-b0a4-d2f73752171a",
+    "description": "DFR: trip out",
+    "executor": "rig.dfr",
+    "command": "trip_out",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "0fc116a8-a871-42d0-90cf-0f571a5fc4d8",
+    "description": "DFR: kick handling",
+    "executor": "rig.dfr",
+    "command": "kick_handling",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "service"
+    ]
+  },
+  {
+    "uuid": "5dc245fd-7d3d-460a-ba9b-38bb53b4f1d7",
+    "description": "RPH: park at setback 1",
+    "executor": "rig.rph",
+    "command": "park_sb1",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "9feebd6d-9369-4d1f-8cf1-c0e728cd2d81",
+    "description": "RPH: park at setback 2",
+    "executor": "rig.rph",
+    "command": "park_sb2",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "739fb08d-a2d7-4dc4-83f3-2b232ed34e81",
+    "description": "RPH: self test",
+    "executor": "rig.rph",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "6c4e2246-4680-4adc-8c85-4131c3a13753",
+    "description": "Stand: move inside setback 1",
+    "executor": "rig.rph",
+    "command": "move_object",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "b53b1cba-3b34-4945-9ca9-735efdf69049",
+    "description": "Stand: move inside ullrigg setback",
+    "executor": "rig.rph",
+    "command": "move_object_sb3",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "a2143d42-d474-4f1f-a30a-69a3fef51db0",
+    "description": "RPH: retrieve odd object",
+    "executor": "rig.rph",
+    "command": "am1_retrieve_odd_object",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "a2143d42-d474-4f1f-a30a-69a3fef51db1",
+    "description": "RPH: deliver odd object",
+    "executor": "rig.rph",
+    "command": "am1_deliver_odd_object",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "a2143d42-d474-4f1f-a30a-69a3fef51dc0",
+    "description": "RPH: retrieve pipe from horizontal holder",
+    "executor": "rig.rph",
+    "command": "am1_retrieve_horizontal",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "a2143d42-d474-4f1f-a30a-69a3fef51dc1",
+    "description": "RPH: deliver pipe to horizontal holder",
+    "executor": "rig.rph",
+    "command": "am1_deliver_horizontal",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rph",
+      "service"
+    ]
+  },
+  {
+    "uuid": "057f6d80-591d-4533-93b7-3d174268080b",
+    "description": "Any object: move object out of drill floor",
+    "executor": "rig.rsf",
+    "command": "move_in_storage",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "storage_object_uuid",
+        "description": "The object to be moved in/out storage",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rsf",
+      "service"
+    ]
+  },
+  {
+    "uuid": "3165194c-f8d1-456c-9147-c33eaefa826f",
+    "description": "Any object: move object into drill floor",
+    "executor": "rig.rsf",
+    "command": "move_out_storage",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      },
+      {
+        "name": "storage_object_uuid",
+        "description": "The object to be moved in/out storage",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rsf",
+      "service"
+    ]
+  },
+  {
+    "uuid": "a2e22578-c131-4a74-a0d8-066f2f810125",
+    "description": "RRN: switch dies",
+    "executor": "rig.rrn",
+    "command": "switch_dies",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dies_id",
+        "description": "RRN dies id",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "5e436e84-65ad-4460-958e-9acb659f6040",
+    "description": "RRN: park",
+    "executor": "rig.rrn",
+    "command": "park",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "d1312df7-4f58-44a9-ad9a-8d515aaf91b5",
+    "description": "RRN: self test",
+    "executor": "rig.rrn",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "5de1cd3c-3edb-48eb-80a6-ae9430e1997f",
+    "description": "RRN: warm up",
+    "executor": "rig.rrn",
+    "command": "warm_up",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rrn",
+      "service"
+    ]
+  },
+  {
+    "uuid": "836bfd70-fb35-42a3-bb80-71fa2cf7fff9",
+    "description": "MSE: self test",
+    "executor": "rig.rdm",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rdm",
+      "service"
+    ]
+  },
+  {
+    "uuid": "2d1665eb-5188-4086-b519-c40e435212b7",
+    "description": "MSE: switch latch set",
+    "executor": "rig.rdm",
+    "command": "switch_latch_set",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "latch_set_id",
+        "description": "MSE latch set id",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rdm",
+      "service"
+    ]
+  },
+  {
+    "uuid": "255ea70d-babe-47e1-bf28-e3e0c450e4d8",
+    "description": "MSE: open all latches",
+    "executor": "rig.rdm",
+    "command": "open_latch1",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rdm",
+      "service"
+    ]
+  },
+  {
+    "uuid": "796bcc96-ade8-4539-a410-6a5588c1c832",
+    "description": "MSE: close latch that matches pipe",
+    "executor": "rig.rdm",
+    "command": "close_latch_auto",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rdm",
+      "service"
+    ]
+  },
+  {
+    "uuid": "e5db94a7-3907-446e-b1c7-63d52272eac6",
+    "description": "PDH: park",
+    "executor": "rig.pdh",
+    "command": "park",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "pdh",
+      "service"
+    ]
+  },
+  {
+    "uuid": "9197df12-bd3a-44ee-9225-e29a6ca7e483",
+    "description": "PDH: self test",
+    "executor": "rig.pdh",
+    "command": "self_test",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "pdh",
+      "service"
+    ]
+  },
+  {
+    "uuid": "2fb7311e-5fa0-4e0c-a0cd-037ee4db8368",
+    "description": "Pipe: move inside pipedeck",
+    "executor": "rig.pdh",
+    "command": "move_object",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      },
+      {
+        "name": "grip_distance",
+        "description": "Place to grip",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "m"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "pdh",
+      "service"
+    ]
+  },
+  {
+    "uuid": "240096b0-7bc0-448a-a3a5-e367d21c5b22",
+    "description": "PDH: dock shuttle",
+    "executor": "rig.pdh",
+    "command": "dock_shuttle",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "pdh",
+      "service"
+    ]
+  },
+  {
+    "uuid": "d854f4a2-61eb-4bec-89e5-11cdac3257e3",
+    "description": "PDH: undock shuttle",
+    "executor": "rig.pdh",
+    "command": "undock_shuttle",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "pdh",
+      "service"
+    ]
+  },
+  {
+    "uuid": "dfce4114-d4bd-4344-8ee3-10ac90fb0717",
+    "description": "Initialization",
+    "executor": "rig.service",
+    "command": "init",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "service",
+      "hidden",
+      "dfr",
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "9f2e28e2-a202-4065-8eeb-e7a6da2edeb4",
+    "description": "Check control RSF RRN RDM",
+    "executor": "rig.service",
+    "command": "check_control_wc",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "hidden"
+    ]
+  },
+  {
+    "uuid": "9f2e28e2-a202-4065-8eeb-e7a6da2edeb5",
+    "description": "Check control DFR",
+    "executor": "rig.service",
+    "command": "check_control_dfr",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "hidden"
+    ]
+  },
+  {
+    "uuid": "9f2e28e2-a202-4065-8eeb-e7a6da2edeb6",
+    "description": "Check control RPH",
+    "executor": "rig.service",
+    "command": "check_control_rph",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "hidden"
+    ]
+  },
+  {
+    "uuid": "9f2e28e2-a202-4065-8eeb-e7a6da2edeb7",
+    "description": "Check control PDH",
+    "executor": "rig.service",
+    "command": "check_control_pdh",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "hidden"
+    ]
+  },
+  {
+    "uuid": "a3adf16f-95e1-46ec-ab7c-76fc61e0ed92",
+    "description": "Stand: automatically find stand and trip in",
+    "executor": "rig.trip_stand",
+    "command": "trip_in_auto",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm"
+    ]
+  },
+  {
+    "uuid": "558f5473-8607-435b-b938-eb0799bc088a",
+    "description": "Stand: automatically find stand and trip out",
+    "executor": "rig.trip_stand",
+    "command": "trip_out_auto",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "dfr",
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm"
+    ]
+  },
+  {
+    "uuid": "fd739a50-0eea-4145-9cb7-4a265aa5b24d",
+    "description": "Stand: trip in with or without doping",
+    "executor": "rig.trip_stand",
+    "command": "trip_in",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_makeup_torque",
+        "description": "Makeup torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm"
+    ]
+  },
+  {
+    "uuid": "1087466b-b4b9-4d30-8c47-f36de1a3ba88",
+    "description": "Stand: trip out dry or wet",
+    "executor": "rig.trip_stand",
+    "command": "trip_out",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_breakout_torque",
+        "description": "Breakout torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      },
+      {
+        "name": "wet",
+        "description": "Wet tripping",
+        "type": "bool",
+        "ui": {
+          "type": "check_box",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm"
+    ]
+  },
+  {
+    "uuid": "fc5028b2-2fdf-4cb3-8631-4e09ba1f7415",
+    "description": "Pipe: automatically find pipe and trip in",
+    "executor": "rig.trip_pipe",
+    "command": "trip_in_auto",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "6bf9d145-67bf-4452-8dff-8f4cc857e270",
+    "description": "Pipe: automatically find pipe and trip out",
+    "executor": "rig.trip_pipe",
+    "command": "trip_out_auto",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "2fb7311e-5fa0-4e0c-a0cd-037ee4db8365",
+    "description": "Pipe: trip in with or without doping",
+    "executor": "rig.trip_pipe",
+    "command": "trip_in",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_makeup_torque",
+        "description": "Makeup torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "2fb7311e-5fa0-4e0c-a0cd-037ee4db8366",
+    "description": "Pipe: trip out dry or wet",
+    "executor": "rig.trip_pipe",
+    "command": "trip_out",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_breakout_torque",
+        "description": "Breakout torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      },
+      {
+        "name": "wet",
+        "description": "Wet tripping",
+        "type": "bool",
+        "ui": {
+          "type": "check_box",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "3aab199c-febe-4c2d-92fc-2e562f7fff57",
+    "description": "Pipe: trip in via RPH AM1",
+    "executor": "rig.trip_pipe",
+    "command": "trip_in_via_rph_am1",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_makeup_torque",
+        "description": "Makeup torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "daf8123f-2439-401c-b5c3-8b5ba1f6a128",
+    "description": "Pipe: trip out via RPH AM1",
+    "executor": "rig.trip_pipe",
+    "command": "trip_out_via_rph_am1",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_breakout_torque",
+        "description": "Breakout torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "e926a0b2-6f01-41d4-a8fb-3fdab05bbeb6",
+    "description": "Pipe: trip in via BOW",
+    "executor": "rig.trip_pipe",
+    "command": "trip_in_via_bow",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_makeup_torque",
+        "description": "Makeup torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "423b9bae-aeba-4276-8c19-cb2919cc0f2c",
+    "description": "Pipe: trip out via BOW",
+    "executor": "rig.trip_pipe",
+    "command": "trip_out_via_bow",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_breakout_torque",
+        "description": "Breakout torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "casing",
+        "description": "casing",
+        "type": "bool",
+        "ui": {
+          "type": "check_box",
+          "options": []
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "rph",
+      "rsf",
+      "rrn",
+      "rdm",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "1fcaaa35-fdd4-445e-ab66-f5c31a5d97a1",
+    "description": "Sub: trip in",
+    "executor": "rig.trip_sub",
+    "command": "trip_in",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_makeup_torque",
+        "description": "Makeup torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "rsf",
+      "rrn",
+      "rdm"
+    ]
+  },
+  {
+    "uuid": "e1006fdd-4a16-4e1b-9af0-ec9d8483350b",
+    "description": "Sub: trip out",
+    "executor": "rig.trip_sub",
+    "command": "trip_out",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "connection_breakout_torque",
+        "description": "Breakout torque (kNm)",
+        "type": "double",
+        "ui": {
+          "type": "input_field",
+          "options": [
+            "kNm"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "rsf",
+      "rrn",
+      "rdm"
+    ]
+  },
+  {
+    "uuid": "0e213dff-6081-448a-836e-a782ddcd090d",
+    "description": "Pipe: handover from PDH to RPH AM1",
+    "executor": "rig.handover",
+    "command": "pdh_to_rph_am1",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "bfbaf8a0-2a21-42aa-b5a5-8511d77ea432",
+    "description": "Pipe: handover from PDH to RPH AM2",
+    "executor": "rig.handover",
+    "command": "pdh_to_rph_am2",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "dope_seq",
+        "description": "Dope sequence: ",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "none",
+            "full",
+            "clean"
+          ]
+        }
+      },
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "19dda420-7f35-4eef-bc1e-be787a3339f6",
+    "description": "Pipe: handover from RPH AM1 to PDH",
+    "executor": "rig.handover",
+    "command": "rph_am1_to_pdh",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "1a05a6d8-cec0-4077-b6cd-404f2bbaaa05",
+    "description": "Pipe: handover from RPH AM2 to PDH",
+    "executor": "rig.handover",
+    "command": "rph_am2_to_pdh",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "rph",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "cfd08a25-3346-4e80-b2ef-da0d4900d103",
+    "description": "Sub: handover from DFR to PDH",
+    "executor": "rig.handover",
+    "command": "dfr_to_pdh",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "pdh"
+    ]
+  },
+  {
+    "uuid": "32c52218-70e5-4097-9c25-5347f5c62367",
+    "description": "Sub: handover from PDH to DFR",
+    "executor": "rig.handover",
+    "command": "pdh_to_dfr",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "object_uuid",
+        "description": "The object to be handled",
+        "type": "string",
+        "ui": {
+          "type": "tubular",
+          "options": []
+        }
+      },
+      {
+        "name": "holder_uuid",
+        "description": "The holder for the object",
+        "type": "string",
+        "ui": {
+          "type": "holder",
+          "options": []
+        }
+      }
+    ],
+    "tags": [
+      "dfr",
+      "pdh"
+    ]
+  }
+]
