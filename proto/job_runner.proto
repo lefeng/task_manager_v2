@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package job_runner;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Service
+// ─────────────────────────────────────────────────────────────────────────────
+
+service RDSJobRunner {
+    rpc Ping       (PingRequest)          returns (PingResponse);
+    rpc execute    (ExecuteRequest)       returns (ExecuteResponse);
+    rpc library    (LibraryRequest)       returns (LibraryResponse);
+    rpc jobs       (JobsRequest)          returns (JobsResponse);
+    rpc trigger    (TriggerRequest)       returns (TriggerResponse);
+    rpc abort      (AbortRequest)         returns (AbortResponse);
+    rpc status     (StatusRequest)        returns (StatusResponse);
+
+    // NEW: task_manager opens this stream after execute().
+    // Runner pushes StatusUpdate messages until the job finishes.
+    // Replaces the old REST PUT callback pattern.
+    rpc StreamStatus  (StatusStreamRequest) returns (stream StatusUpdate);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Existing messages (unchanged — backward compatible)
+// ─────────────────────────────────────────────────────────────────────────────
+
+message PingRequest  {}
+message PingResponse { bool ok = 1; }
+
+message ExecuteRequest {
+    string client_version = 1; // optional, leave empty
+    string uuid           = 2;
+    string command        = 3;
+    string arguments      = 4; // JSON string
+    string job_url        = 5; // legacy REST callback — leave empty when streaming
+}
+message ExecuteResponse { bool success = 1; }
+
+message LibraryRequest  {}
+message LibraryResponse { repeated string library = 1; }
+
+message JobsRequest  {}
+message JobsResponse { repeated string job_uuids = 1; }
+
+message TriggerRequest {
+    string job_uuid  = 1;
+    string event     = 2;
+    string arguments = 3; // JSON string
+}
+message TriggerResponse { bool success = 1; }
+
+message AbortRequest  { string uuid = 1; }
+message AbortResponse { bool success = 1; }
+
+message StatusRequest  { string uuid = 1; }
+message StatusResponse { repeated string status = 1; } // JSON list (legacy)
+
+// ─────────────────────────────────────────────────────────────────────────────
+// New streaming messages
+// ─────────────────────────────────────────────────────────────────────────────
+
+message StatusStreamRequest {
+    string job_uuid = 1;
+}
+
+message StatusUpdate {
+    string job_uuid          = 1;
+    int32  state             = 2; // maps to JobState enum
+    float  progress          = 3; // 0.0 – 1.0
+    bool   paused            = 4;
+    repeated string task_statuses = 5; // JSON strings, one per task
+}
