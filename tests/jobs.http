@@ -169,28 +169,28 @@ Content-Type: application/json
 ### ── Get / delete a specific job ─────────────────────────────────────────────
 
 ### Get job by UUID (replace with UUID from a create response above)
-GET {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1
+GET {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c
 Accept: application/json
 
 
 ### Delete job (only allowed when NOT_STARTED or terminal)
-DELETE {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1
+DELETE {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c
 
 
 ### ── Run / abort / trigger ───────────────────────────────────────────────────
 
 ### Run job (queue → execute on runner)
-POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/run
+POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/run
 Content-Type: application/json
 
 
 ### Abort job
-POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/abort
+POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/abort
 Content-Type: application/json
 
 
 ### Trigger event: pause
-POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
 Content-Type: application/json
 
 {
@@ -199,8 +199,18 @@ Content-Type: application/json
 }
 
 
+### Trigger event: stop
+POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
+Content-Type: application/json
+
+{
+  "event": "stop",
+  "arguments": {}
+}
+
+
 ### Trigger event: resume
-POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
 Content-Type: application/json
 
 {
@@ -210,7 +220,7 @@ Content-Type: application/json
 
 
 ### Trigger custom event with arguments
-POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
 Content-Type: application/json
 
 {
