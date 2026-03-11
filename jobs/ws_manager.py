@@ -67,15 +67,6 @@ class JobWSManager:
         for ws in dead_global:
             self.disconnect_global(ws)
 
-    async def broadcast_all(self, data: dict) -> None:
-        """Broadcast to every connected client across all jobs."""
-        for job_uuid in list(self._connections.keys()):
-            await self.broadcast(job_uuid, data)
-
-    @property
-    def active_job_uuids(self) -> list[str]:
-        return list(self._connections.keys())
-
 
 # Singleton — imported by router and grpc_client
 manager = JobWSManager()

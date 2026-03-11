@@ -9,10 +9,6 @@ from core.grpc_client import grpc_lifespan
 from blueprints.router import router as blueprints_router
 from jobs.router import router as jobs_router
 
-# Import models so SQLAlchemy is aware of them (needed by Alembic autogenerate)
-import blueprints.models  # noqa: F401
-import jobs.models  # noqa: F401
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

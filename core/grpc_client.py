@@ -110,8 +110,26 @@ async def _consume_stream(job_uuid: str) -> None:
 
     except grpc.aio.AioRpcError as exc:
         logger.warning("Stream ended for job %s: %s", job_uuid, exc.code())
+        # Runner went away — mark job FAILED if it is still in an active state
+        async with AsyncSessionLocal() as db:
+            job = await job_service.get(db, job_uuid)
+            if job and job.state not in (
+                job_service.JobState.SUCCESS,
+                job_service.JobState.FAILED,
+                job_service.JobState.ABORTED,
+            ):
+                logger.warning("Marking job %s FAILED due to lost runner stream", job_uuid)
+                await job_service.mark_failed(db, job_uuid)
     except asyncio.CancelledError:
         logger.debug("Stream cancelled for job %s", job_uuid)
         raise
     except Exception:
         logger.exception("Unexpected error in stream consumer for job %s", job_uuid)
+        async with AsyncSessionLocal() as db:
+            job = await job_service.get(db, job_uuid)
+            if job and job.state not in (
+                job_service.JobState.SUCCESS,
+                job_service.JobState.FAILED,
+                job_service.JobState.ABORTED,
+            ):
+                await job_service.mark_failed(db, job_uuid)

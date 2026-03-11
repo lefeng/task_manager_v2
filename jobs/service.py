@@ -202,6 +202,8 @@ async def apply_status_update(db: AsyncSession, job_uuid: str, update) -> Job | 
     job.state = new_state
     job.progress = update.progress
     job.paused = update.paused
+    if new_state == JobState.ABORTED:
+        job.stopped = True
 
     now = datetime.now(timezone.utc)
     if new_state == JobState.RUNNING and not job.date_started:

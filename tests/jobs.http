@@ -60,6 +60,17 @@ Content-Type: application/json
   "tags": []
 }
 
+### Create job: self_test iRacker (no arguments)
+POST {{baseUrl}}:5000/api/v2/jobs
+Content-Type: application/json
+
+{
+  "blueprint_uuid": "3a221538-fdb6-4f78-9d99-362a8bdd509a",
+  "created_by": "test",
+  "arguments": [],
+  "assets": {},
+  "tags": []
+}
 
 ### Create job: set_mode (single string argument)
 # @name createJobStringArg
@@ -158,28 +169,28 @@ Content-Type: application/json
 ### ── Get / delete a specific job ─────────────────────────────────────────────
 
 ### Get job by UUID (replace with UUID from a create response above)
-GET {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c
+GET {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1
 Accept: application/json
 
 
 ### Delete job (only allowed when NOT_STARTED or terminal)
-DELETE {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c
+DELETE {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1
 
 
 ### ── Run / abort / trigger ───────────────────────────────────────────────────
 
 ### Run job (queue → execute on runner)
-POST {{baseUrl}}:5000/api/v2/jobs/e10699a5-4ac9-4bab-9ab9-cad6374e206c/run
+POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/run
 Content-Type: application/json
 
 
 ### Abort job
-POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/abort
+POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/abort
 Content-Type: application/json
 
 
 ### Trigger event: pause
-POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/trigger
 Content-Type: application/json
 
 {
@@ -189,7 +200,7 @@ Content-Type: application/json
 
 
 ### Trigger event: resume
-POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/trigger
 Content-Type: application/json
 
 {
@@ -199,34 +210,10 @@ Content-Type: application/json
 
 
 ### Trigger custom event with arguments
-POST {{baseUrl}}:5000/api/v2/jobs/75e123de-4c4b-417d-b573-b6fea599da5c/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/728335b1-ef91-4f24-ade7-b6c7ee886ce1/trigger
 Content-Type: application/json
 
 {
   "event": "manual_confirmation_complete",
   "arguments": { "confirmed": true }
 }
-
-
-### ── WebSocket — global stream (all running jobs) ────────────────────────────
-# WebSocket endpoints cannot be tested with HTTP request files.
-# Use wscat, websocat, or a browser console:
-#
-#   wscat  -c ws://localhost:8000/api/v2/jobs/ws
-#   websocat ws://localhost:8000/api/v2/jobs/ws
-#
-# On connect you receive a snapshot of every QUEUED/RUNNING/PAUSED job as
-# individual JSON messages. After that, every state change for any job is
-# pushed automatically.
-#
-# Send any text (e.g. "ping") to keep the connection alive.
-
-
-### ── WebSocket — per-job stream ──────────────────────────────────────────────
-# Subscribe to a single job:
-#
-#   wscat  -c ws://localhost:8000/api/v2/jobs/{{jobUuid}}/ws
-#   websocat ws://localhost:8000/api/v2/jobs/{{jobUuid}}/ws
-#
-# On connect you receive the full current job state once, then get pushed
-# updates until the job reaches a terminal state or you disconnect.

@@ -2,8 +2,6 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from jobs.models import JobState
-
 
 class JobArgumentBase(BaseModel):
     name: str
@@ -29,16 +27,6 @@ class JobCreate(BaseModel):
     arguments: list[JobArgumentCreate] = []
 
 
-class JobUpdate(BaseModel):
-    """Used internally by the gRPC stream consumer — not exposed on the API."""
-    state: int | None = None
-    progress: float | None = None
-    paused: bool | None = None
-    stopped: bool | None = None
-    date_started: datetime | None = None
-    date_finished: datetime | None = None
-
-
 class Job(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -57,16 +45,6 @@ class Job(BaseModel):
     date_started: datetime | None
     date_finished: datetime | None
     arguments: list[JobArgument] = []
-
-
-class JobStateLabel(BaseModel):
-    """Convenience: state int + human label."""
-    value: int
-    label: str
-
-    @classmethod
-    def from_state(cls, state: int) -> "JobStateLabel":
-        return cls(value=state, label=JobState(state).name)
 
 
 class TriggerRequest(BaseModel):
