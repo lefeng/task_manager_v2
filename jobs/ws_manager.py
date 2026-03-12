@@ -70,3 +70,41 @@ class JobWSManager:
 
 # Singleton — imported by router and grpc_client
 manager = JobWSManager()
+
+
+class EventWSManager:
+    """
+    WebSocket manager for database-level job change events.
+
+    All connected clients receive every INSERT / UPDATE / DELETE notification
+    from the 'jobs' table via PostgreSQL LISTEN/NOTIFY.
+    """
+
+    def __init__(self) -> None:
+        self._clients: set[WebSocket] = set()
+
+    async def connect(self, ws: WebSocket) -> None:
+        await ws.accept()
+        self._clients.add(ws)
+        logger.debug("EventWS connect: total=%d", len(self._clients))
+
+    def disconnect(self, ws: WebSocket) -> None:
+        self._clients.discard(ws)
+        logger.debug("EventWS disconnect: total=%d", len(self._clients))
+
+    async def broadcast(self, data: dict) -> None:
+        if not self._clients:
+            return
+
+        clients = list(self._clients)
+        results = await asyncio.gather(
+            *[ws.send_json(data) for ws in clients],
+            return_exceptions=True,
+        )
+        for ws, result in zip(clients, results):
+            if isinstance(result, Exception):
+                self.disconnect(ws)
+
+
+# Singleton — imported by router and jobs/events.py
+event_manager = EventWSManager()

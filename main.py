@@ -6,15 +6,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 from core.database import engine
 from core.grpc_client import grpc_lifespan
+from core.pg_listener import pg_listener
 from blueprints.router import router as blueprints_router
 from jobs.router import router as jobs_router
+from jobs.events import handle_jobs_change
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Schema is created by scripts/setup_db.py — run it once before starting.
+    pg_listener.add_channel("jobs_changes")
+    pg_listener.add_handler(handle_jobs_change)
+    await pg_listener.start(settings.database_url)
     async with grpc_lifespan():
         yield
+    await pg_listener.stop()
     await engine.dispose()
 
 

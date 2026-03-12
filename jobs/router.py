@@ -25,7 +25,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.database import get_db
 from core.grpc_client import get_stub, start_job_stream, cancel_job_stream
 from jobs import schemas, service
-from jobs.ws_manager import manager
+from jobs.ws_manager import manager, event_manager
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -197,6 +197,28 @@ async def trigger_job(
 
 
 # ── WebSocket ─────────────────────────────────────────────────────────────────
+
+@router.websocket("/events/ws")
+async def jobs_events_ws(ws: WebSocket):
+    """
+    Database-level job change stream via PostgreSQL LISTEN/NOTIFY.
+
+    Fires on every INSERT, UPDATE, or DELETE on the jobs table — regardless
+    of which code path triggered the change.
+
+    Message format:
+        {"topic": "jobs", "event": "insert"|"update"|"delete",
+         "data": {"uuid": "...", "sequence_number": 42, "state": 2}}
+
+    For deletes, only "uuid" is present in "data" (the row is already gone).
+    """
+    await event_manager.connect(ws)
+    try:
+        while True:
+            await ws.receive_text()
+    except WebSocketDisconnect:
+        event_manager.disconnect(ws)
+
 
 @router.websocket("/ws")
 async def jobs_ws_global(ws: WebSocket, db: AsyncSession = Depends(get_db)):

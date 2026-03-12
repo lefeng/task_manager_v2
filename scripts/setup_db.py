@@ -17,6 +17,8 @@ import asyncpg
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from sqlalchemy import text
+
 from core.config import settings
 from core.database import engine, Base
 import blueprints.models  # noqa: F401
@@ -52,6 +54,38 @@ async def create_database() -> None:
         await conn.close()
 
 
+async def setup_triggers() -> None:
+    """Create (or replace) the PostgreSQL trigger that notifies on jobs changes."""
+    async with engine.begin() as conn:
+        # Trigger function: sends only the uuid and operation type.
+        # Payload is intentionally minimal to stay well under the 8KB NOTIFY limit.
+        await conn.execute(text("""
+            CREATE OR REPLACE FUNCTION notify_jobs_change()
+            RETURNS trigger AS $$
+            DECLARE
+                row_uuid TEXT;
+            BEGIN
+                row_uuid := CASE WHEN TG_OP = 'DELETE' THEN OLD.uuid ELSE NEW.uuid END;
+                PERFORM pg_notify(
+                    'jobs_changes',
+                    json_build_object('event', lower(TG_OP), 'uuid', row_uuid)::text
+                );
+                RETURN NULL;
+            END;
+            $$ LANGUAGE plpgsql;
+        """))
+
+        await conn.execute(text("DROP TRIGGER IF EXISTS jobs_notify ON jobs;"))
+
+        await conn.execute(text("""
+            CREATE TRIGGER jobs_notify
+            AFTER INSERT OR UPDATE OF uuid, sequence_number, state OR DELETE ON jobs
+            FOR EACH ROW EXECUTE FUNCTION notify_jobs_change();
+        """))
+
+    print("Triggers created.")
+
+
 async def setup(drop: bool = False) -> None:
     await create_database()
 
@@ -61,6 +95,8 @@ async def setup(drop: bool = False) -> None:
             await conn.run_sync(Base.metadata.drop_all)
         print("Creating tables...")
         await conn.run_sync(Base.metadata.create_all)
+
+    await setup_triggers()
 
     await engine.dispose()
     print("Done.")
