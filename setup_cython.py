@@ -27,18 +27,30 @@ cython_modules = [
 
 
 def clean_files(file_types="all", description="files"):
-    print(f"Cleaning up {description}...")
+    """Remove compiled files based on type
 
+    Args:
+        file_types: "all", "compiled", "intermediate", or list of extensions
+        description: Description for logging
+    """
+    print(f"🧹 Cleaning up {description}...")
+
+    # Define file type groups
     type_groups = {
         "compiled": ["*.so", "*.pyd", "*.dll"],
         "intermediate": ["*.c", "*.cpp"],
         "all": ["*.so", "*.pyd", "*.dll", "*.c", "*.cpp"],
     }
 
+    # Determine which extensions to remove
     if isinstance(file_types, str):
         extensions_to_remove = type_groups.get(file_types, [])
     else:
         extensions_to_remove = file_types
+
+    if not extensions_to_remove:
+        print(f"  No file types specified for {description}")
+        return 0
 
     removed_count = 0
 
@@ -54,29 +66,33 @@ def clean_files(file_types="all", description="files"):
                 except OSError as e:
                     print(f"  Could not remove {file_path}: {e}")
 
-    print(f"Removed {removed_count} {description}")
+    print(f"✅ Removed {removed_count} {description}")
     return removed_count
 
 
 def check_dependencies():
+    """Check if required dependencies are installed"""
     try:
         import Cython
-        print(f"Cython version: {Cython.__version__}")
+
+        print(f"✅ Cython version: {Cython.__version__}")
     except ImportError:
-        print("Cython not installed. Install with: pip install Cython")
+        print("❌ Cython not installed. Install with: pip install Cython")
         return False
 
     try:
         import cx_Freeze
-        print(f"cx_Freeze version: {cx_Freeze.__version__}")
+
+        print(f"✅ cx_Freeze version: {cx_Freeze.__version__}")
     except ImportError:
-        print("cx_Freeze not installed. Install with: pip install cx_Freeze")
+        print("❌ cx_Freeze not installed. Install with: pip install cx_Freeze")
         return False
 
     return True
 
 
 def compile_module(module_path):
+    """Compile a single module with Cython"""
     if not os.path.exists(module_path):
         print(f"Warning: {module_path} not found, skipping")
         return False
@@ -84,33 +100,38 @@ def compile_module(module_path):
     print(f"Compiling {module_path}...")
 
     try:
-        cmd = [
-            sys.executable,
-            "-m",
-            "Cython.Build.Cythonize",
-            "-i",       # Build in-place
-            "-3",       # Python 3 mode
-            "--force",  # Force recompilation
-            module_path,
-        ]
+        # Use an inline setup script with explicit packages=[] to avoid
+        # setuptools' multi-package auto-discovery error
+        inline_script = (
+            "import sys; from setuptools import setup; "
+            "from Cython.Build import cythonize; "
+            f"setup(packages=[], ext_modules=cythonize(['{module_path}'], "
+            "language_level=3, force=True), "
+            "script_args=['build_ext', '--inplace'])"
+        )
+        cmd = [sys.executable, "-c", inline_script]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
 
         if result.returncode == 0:
-            print(f"  OK: {module_path}")
+            print(f"✅ Successfully compiled {module_path}")
             return True
         else:
-            print(f"  Failed: {module_path} (keeping as Python file)")
+            print(f"❌ Failed to compile {module_path}")
+            print(f"Keeping as Python file")
+            # Don't print full error to keep output clean
             return False
 
     except Exception as e:
-        print(f"  Exception: {module_path}: {e}")
+        print(f"❌ Exception compiling {module_path}: {e}")
         return False
 
 
 def compile_all_modules():
-    print("\nStarting Cython compilation...")
+    """Compile all specified modules"""
+    print("\n🔨 Starting Cython compilation...")
 
+    # Check which modules exist
     available_modules = [m for m in cython_modules if os.path.exists(m)]
 
     if not available_modules:
@@ -122,33 +143,42 @@ def compile_all_modules():
         if compile_module(module_path):
             success_count += 1
 
-    print(f"\nCompiled {success_count}/{len(available_modules)} modules")
-    return success_count > 0
+    print(f"\n📊 Compiled {success_count}/{len(available_modules)} modules")
+
+    if success_count > 0:
+        print("✅ Some modules compiled successfully!")
+        return True
+    else:
+        print("⚠️  No modules were compiled")
+        return False
 
 
 def check_compilation_results():
-    print("\nCompilation results:")
+    """Show which modules were successfully compiled"""
+    print("\n📋 Compilation results:")
 
     for module_path in cython_modules:
         if not os.path.exists(module_path):
             continue
 
-        module_dir = os.path.dirname(module_path) or "."
+        module_dir = os.path.dirname(module_path)
         module_name = os.path.basename(module_path).replace(".py", "")
 
+        # Look for compiled extension files
         so_files = []
         for ext in [".so", ".pyd", ".dll"]:
             pattern = os.path.join(module_dir, f"{module_name}*{ext}")
             so_files.extend(glob.glob(pattern))
 
         if so_files:
-            print(f"  compiled: {module_path}")
+            print(f"✅ {module_path} → compiled")
         else:
-            print(f"  python:   {module_path}")
+            print(f"🐍 {module_path} → Python")
 
 
 def build_with_cx_freeze():
-    print("\nBuilding with cx_Freeze...")
+    """Run the cx_Freeze build"""
+    print("\n📦 Building with cx_Freeze...")
 
     try:
         result = subprocess.run(
@@ -156,74 +186,91 @@ def build_with_cx_freeze():
         )
 
         if result.returncode == 0:
-            print("cx_Freeze build successful!")
+            print("✅ cx_Freeze build successful!")
             return True
         else:
-            print("cx_Freeze build failed:")
+            print("❌ cx_Freeze build failed:")
             print(result.stderr)
             return False
 
     except Exception as e:
-        print(f"Exception during cx_Freeze build: {e}")
+        print(f"❌ Exception during cx_Freeze build: {e}")
         return False
 
 
 def main():
-    print("TaskManager v2 - Cython Build")
+    """Main build process"""
+    print("Taskman - Cython Build")
     print("=" * 50)
 
+    # Parse command line arguments
     compile_only = "--compile-only" in sys.argv
     build_only = "--build-only" in sys.argv
     clean_only = "--clean" in sys.argv
 
     if clean_only:
         clean_files("all", "all compiled and intermediate files")
-        print("Cleanup complete!")
+        print("✅ Cleanup complete!")
         return
 
+    # Check dependencies
     if not check_dependencies():
-        print("\nMissing dependencies. Please install and try again.")
+        print("\n❌ Missing dependencies. Please install and try again.")
         sys.exit(1)
 
     try:
+        # Always clean first for consistent builds
         clean_files("all", "all compiled and intermediate files")
 
         if not build_only:
-            compile_all_modules()
+            # Compile with Cython
+            compile_success = compile_all_modules()
             check_compilation_results()
+
+            # Clean up intermediate files after successful build
             clean_files("intermediate", "intermediate C/C++ files")
 
             if compile_only:
-                print("\nCompilation complete!")
+                print("\n✅ Compilation complete!")
                 return
 
         if not compile_only:
+            # Build with cx_Freeze
             build_success = build_with_cx_freeze()
 
             if build_success:
-                print("\nBuild complete!")
-                print("Output: build/exe/")
-                print("Run:    ./build/exe/taskman")
-                print("DB:     ./build/exe/taskman_setup_db [--drop]")
-                print("Seed:   ./build/exe/taskman_seed_blueprints --json data/x29/blueprints.json")
+                print("\n🎉 Complete build successful!")
+                print("📁 Output: build/exe/")
+                print("🚀 Test with: ./build/exe/taskman")
+                print("\n📋 What's included:")
+                print("  ✅ Compiled .so files (performance)")
+                print("  ✅ Python .py files (fallback)")
+                print("  ❌ Intermediate .c files (cleaned up)")
             else:
-                print("\ncx_Freeze build failed")
+                print("\n⚠️  cx_Freeze build failed")
+                print(
+                    "💡 Try: python3 setup_cython.py --clean && python3 setup.py build"
+                )
 
     except KeyboardInterrupt:
-        print("\nBuild interrupted by user")
+        print("\n\n⚠️  Build interrupted by user")
     except Exception as e:
-        print(f"\nBuild failed: {e}")
+        print(f"\n❌ Build failed: {e}")
         import traceback
+
         traceback.print_exc()
 
 
 if __name__ == "__main__":
-    if "--help" in sys.argv:
-        print("Usage:")
-        print("  python3 setup_cython.py                  # Clean + compile + build")
-        print("  python3 setup_cython.py --clean          # Just clean compiled files")
-        print("  python3 setup_cython.py --compile-only   # Just compile with Cython")
-        print("  python3 setup_cython.py --build-only     # Just build with cx_Freeze")
-        sys.exit(0)
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "--help":
+            print("Usage:")
+            print("  python3 setup_cython.py              # Clean + compile + build")
+            print("  python3 setup_cython.py --clean      # Just clean compiled files")
+            print("  python3 setup_cython.py --compile-only # Just compile with Cython")
+            print(
+                "  python3 setup_cython.py --build-only   # Just build with cx_Freeze"
+            )
+            sys.exit(0)
 
     main()

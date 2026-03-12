@@ -23,6 +23,7 @@ venv.bak/
 .python-version
 
 # IDE files
+.claude/
 .vscode/
 .idea/
 *.sublime-project
