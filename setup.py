@@ -46,22 +46,26 @@ executables = [
         base=None,
         target_name="taskman",
     ),
-    Executable(
-        script="scripts/setup_db.py",
-        base=None,
-        target_name="taskman_setup_db",
-    ),
-    Executable(
-        script="scripts/seed_blueprints.py",
-        base=None,
-        target_name="taskman_seed_blueprints",
-    ),
 ]
 
+
+def cleanup_build_folder(build_dir):
+    """Remove license file and replace rig folder with symbolic link"""
+    # Remove the license file as before
+    license_file = os.path.join(build_dir, "frozen_application_license.txt")
+    if os.path.exists(license_file):
+        os.remove(license_file)
+        print(f"Removed {license_file}")
+
+
 setup(
-    name="TaskManager",
+    name="Taskman",
     version="2.0.0",
-    description="Task Manager v2",
+    description="Task Manager",
     options={"build_exe": build_exe_options},
     executables=executables,
 )
+
+
+# Post-build cleanup
+cleanup_build_folder(build_exe_options["build_exe"])

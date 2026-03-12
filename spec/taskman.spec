@@ -4,9 +4,6 @@ a = Analysis(
     ['../start_taskman.py'],
     pathex=['..'],
     binaries=[],
-    datas=[
-        ('../data', 'data'),
-    ],
     hiddenimports=[
         'uvicorn',
         'uvicorn.logging',
@@ -96,7 +93,6 @@ exe = EXE(
 coll = COLLECT(
     exe,
     a.binaries,
-    a.datas,
     strip=False,
     upx=True,
     upx_exclude=[],
