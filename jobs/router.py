@@ -17,6 +17,7 @@ WebSocket:
 
 import json
 import logging
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,10 +35,10 @@ router = APIRouter()
 
 @router.get("", response_model=list[schemas.Job])
 async def list_jobs(
-    limit: int = Query(100, le=500),
-    offset: int = Query(0, ge=0),
-    state: list[int] | None = Query(None, description="Filter by one or more JobState values"),
-    from_sequence_number: int | None = Query(None, ge=0),
+    limit: Annotated[int, Query(le=500)] = 100,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    state: Annotated[list[int] | None, Query(description="Filter by one or more JobState values")] = None,
+    from_sequence_number: Annotated[int | None, Query(ge=0)] = None,
     db: AsyncSession = Depends(get_db),
 ):
     return await service.get_all(

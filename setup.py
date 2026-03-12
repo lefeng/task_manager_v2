@@ -4,10 +4,7 @@ import sys
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Bundle the data directory (blueprints seed files)
-include_files = [
-    ("data", "data"),
-]
+include_files = []
 
 build_exe_options = {
     "packages": [
@@ -50,12 +47,23 @@ executables = [
 
 
 def cleanup_build_folder(build_dir):
-    """Remove license file and replace rig folder with symbolic link"""
-    # Remove the license file as before
+    """Remove license file, share folder, and create symbolic link to .env"""
     license_file = os.path.join(build_dir, "frozen_application_license.txt")
     if os.path.exists(license_file):
         os.remove(license_file)
         print(f"Removed {license_file}")
+
+    share_dir = os.path.join(build_dir, "share")
+    if os.path.exists(share_dir):
+        import shutil
+
+        shutil.rmtree(share_dir)
+        print(f"Removed {share_dir}")
+
+    env_link = os.path.join(build_dir, ".env")
+    if not os.path.exists(env_link):
+        os.symlink("../.env", env_link)
+        print(f"Created symlink {env_link} -> ../.env")
 
 
 setup(
