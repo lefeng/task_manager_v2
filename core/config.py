@@ -8,11 +8,10 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
-    database_url: str = "postgresql+asyncpg://ipc:dreamteam@localhost:5432/taskman"
-    runner_grpc_addr: str = "localhost:50051"
-    cors_origins: list[str] = ["*"]
-    host: str = "0.0.0.0"
-    port: int = 5000
+    database_url: str
+    runner_grpc_addr: str
+    host: str
+    port: int
 
 
 settings = Settings()
