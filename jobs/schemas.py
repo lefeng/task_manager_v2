@@ -19,6 +19,13 @@ class JobArgument(JobArgumentBase):
     job_uuid: str
 
 
+class JobBlueprint(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    uuid: str
+    description: str | None
+
+
 class JobCreate(BaseModel):
     blueprint_uuid: str
     created_by: str | None = None
@@ -32,7 +39,7 @@ class Job(BaseModel):
 
     uuid: str
     sequence_number: int
-    blueprint_uuid: str | None
+    blueprint: JobBlueprint | None = None
     state: int
     progress: float
     paused: bool
