@@ -19,7 +19,15 @@ import json
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect, status, Query
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+    Query,
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import get_db
@@ -33,11 +41,14 @@ router = APIRouter()
 
 # ── REST ──────────────────────────────────────────────────────────────────────
 
+
 @router.get("", response_model=list[schemas.Job])
 async def list_jobs(
     limit: Annotated[int, Query(le=500)] = 100,
     offset: Annotated[int, Query(ge=0)] = 0,
-    state: Annotated[list[int] | None, Query(description="Filter by one or more JobState values")] = None,
+    state: Annotated[
+        list[int] | None, Query(description="Filter by one or more JobState values")
+    ] = None,
     from_sequence_number: Annotated[int | None, Query(ge=0)] = None,
     db: AsyncSession = Depends(get_db),
 ):
@@ -103,7 +114,7 @@ async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
                 await service.mark_failed(db, uuid)
                 raise HTTPException(
                     status_code=409,
-                    detail=f"Job {uuid} is marked RUNNING but is not present on the runner — marked FAILED"
+                    detail=f"Job {uuid} is marked RUNNING but is not present on the runner — marked FAILED",
                 )
         except HTTPException:
             raise
@@ -194,6 +205,7 @@ async def trigger_job(
 
 
 # ── WebSocket ─────────────────────────────────────────────────────────────────
+
 
 @router.websocket("/ws")
 async def jobs_ws_global(ws: WebSocket, db: AsyncSession = Depends(get_db)):

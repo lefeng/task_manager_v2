@@ -77,7 +77,11 @@ class PGListener:
 
     async def _connect_and_listen(self) -> None:
         # asyncpg uses plain postgresql:// — strip the SQLAlchemy dialect prefix
-        raw_dsn = make_url(self._dsn).set(drivername="postgresql").render_as_string(hide_password=False)
+        raw_dsn = (
+            make_url(self._dsn)
+            .set(drivername="postgresql")
+            .render_as_string(hide_password=False)
+        )
         self._conn = await asyncpg.connect(raw_dsn)
         logger.info("PGListener connected, channels: %s", self._channels)
 

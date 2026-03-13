@@ -29,7 +29,9 @@ class JobStatusManager:
     async def connect(self, job_uuid: str, ws: WebSocket) -> None:
         await ws.accept()
         self._connections[job_uuid].add(ws)
-        logger.debug("WS connect: job=%s total=%d", job_uuid, len(self._connections[job_uuid]))
+        logger.debug(
+            "WS connect: job=%s total=%d", job_uuid, len(self._connections[job_uuid])
+        )
 
     def disconnect(self, job_uuid: str, ws: WebSocket) -> None:
         self._connections[job_uuid].discard(ws)

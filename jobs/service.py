@@ -51,16 +51,19 @@ def build_typed_arguments(job: Job) -> dict:
     if not job.blueprint:
         return {arg.name: arg.value for arg in job.arguments}
     type_map = {bp_arg.name: bp_arg.type for bp_arg in job.blueprint.arguments}
-    return {arg.name: cast_value(arg.value, type_map.get(arg.name, "string"))
-            for arg in job.arguments}
+    return {
+        arg.name: cast_value(arg.value, type_map.get(arg.name, "string"))
+        for arg in job.arguments
+    }
+
 
 # Valid state transitions: current → set of allowed next states
 _TRANSITIONS: dict[int, set[int]] = {
     JobState.NOT_STARTED: {JobState.RUNNING, JobState.ABORTED},
-    JobState.RUNNING:     {JobState.SUCCESS, JobState.FAILED, JobState.ABORTED},
-    JobState.ABORTED:     set(),
-    JobState.SUCCESS:     set(),
-    JobState.FAILED:      set(),
+    JobState.RUNNING: {JobState.SUCCESS, JobState.FAILED, JobState.ABORTED},
+    JobState.ABORTED: set(),
+    JobState.SUCCESS: set(),
+    JobState.FAILED: set(),
 }
 
 
@@ -182,7 +185,7 @@ async def apply_status_update(db: AsyncSession, job_uuid: str, update) -> Job | 
         return job
 
     job.state = new_state
-    job.progress = update.progress
+    job.progress = round(update.progress, 2)
     job.paused = update.paused
     if new_state == JobState.ABORTED:
         job.stopped = True

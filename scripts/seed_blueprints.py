@@ -63,14 +63,16 @@ async def seed_from_records(session: AsyncSession, records: list[dict]) -> None:
             tags=rec.get("tags") or [],
         )
         for i, arg in enumerate(rec.get("arguments") or []):
-            bp.arguments.append(BlueprintArgument(
-                uuid=arg.get("uuid") or None,
-                name=arg["name"],
-                type=arg.get("type", "string"),
-                description=arg.get("description"),
-                ui=arg.get("ui") or {},
-                order=arg.get("order", i),
-            ))
+            bp.arguments.append(
+                BlueprintArgument(
+                    uuid=arg.get("uuid") or None,
+                    name=arg["name"],
+                    type=arg.get("type", "string"),
+                    description=arg.get("description"),
+                    ui=arg.get("ui") or {},
+                    order=arg.get("order", i),
+                )
+            )
         session.add(bp)
         inserted += 1
         print(f"  insert: {rec['uuid']} — {rec.get('executor')}:{rec.get('command')}")
@@ -111,13 +113,15 @@ async def seed_from_sqlite(sqlite_path: str) -> None:
     # Group arguments by blueprint
     args_by_bp: dict[str, list] = {}
     for arg in args_raw:
-        args_by_bp.setdefault(arg["blueprint_uuid"], []).append({
-            "uuid": arg["uuid"],
-            "name": arg["name"],
-            "type": arg["type"] or "string",
-            "description": arg["description"],
-            "ui": json.loads(arg["ui"]) if arg["ui"] else {},
-        })
+        args_by_bp.setdefault(arg["blueprint_uuid"], []).append(
+            {
+                "uuid": arg["uuid"],
+                "name": arg["name"],
+                "type": arg["type"] or "string",
+                "description": arg["description"],
+                "ui": json.loads(arg["ui"]) if arg["ui"] else {},
+            }
+        )
 
     records = []
     for bp in blueprints_raw:
@@ -128,15 +132,17 @@ async def seed_from_sqlite(sqlite_path: str) -> None:
             except (json.JSONDecodeError, TypeError):
                 definition = {}
 
-        records.append({
-            "uuid": bp["uuid"],
-            "executor": bp["executor"] or "",
-            "command": bp["command"] or "",
-            "description": bp["description"],
-            "definition": definition or {},
-            "tags": [],
-            "arguments": args_by_bp.get(bp["uuid"], []),
-        })
+        records.append(
+            {
+                "uuid": bp["uuid"],
+                "executor": bp["executor"] or "",
+                "command": bp["command"] or "",
+                "description": bp["description"],
+                "definition": definition or {},
+                "tags": [],
+                "arguments": args_by_bp.get(bp["uuid"], []),
+            }
+        )
 
     print(f"Found {len(records)} blueprints in SQLite.")
     engine = create_async_engine(settings.database_url, echo=False)
@@ -149,7 +155,9 @@ async def seed_from_sqlite(sqlite_path: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Seed taskman blueprints")
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--sqlite", metavar="PATH", help="Path to old task_manager SQLite DB")
+    group.add_argument(
+        "--sqlite", metavar="PATH", help="Path to old task_manager SQLite DB"
+    )
     group.add_argument("--json", metavar="PATH", help="Path to blueprints JSON export")
     args = parser.parse_args()
 

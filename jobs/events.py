@@ -17,7 +17,7 @@ Message format sent to WebSocket clients:
         "event": "insert" | "update" | "delete",
         "data": {
             # jobs insert/update:
-            "uuid": "...", "sequence_number": 42, "state": 2
+            "uuid": "...", "sequence_number": 42, "state": 2, "progress": 0.45
             # blueprints insert/update:
             "uuid": "...", "executor": "...", "command": "...", "description": "..."
             # delete (either topic):
@@ -57,29 +57,40 @@ async def _handle_jobs_change(data: dict) -> None:
         return
 
     if event == "delete":
-        await event_manager.broadcast({"topic": "jobs", "event": "delete", "data": {"uuid": uuid}})
+        await event_manager.broadcast(
+            {"topic": "jobs", "event": "delete", "data": {"uuid": uuid}}
+        )
         return
 
     if event in ("insert", "update"):
         async with AsyncSessionLocal() as session:
             row = await session.execute(
-                select(Job.uuid, Job.sequence_number, Job.state).where(Job.uuid == uuid)
+                select(Job.uuid, Job.sequence_number, Job.state, Job.progress).where(
+                    Job.uuid == uuid
+                )
             )
             job = row.first()
 
         if job is None:
-            logger.debug("db_changes/jobs: job %s not found after %s (already deleted?)", uuid, event)
+            logger.debug(
+                "db_changes/jobs: job %s not found after %s (already deleted?)",
+                uuid,
+                event,
+            )
             return
 
-        await event_manager.broadcast({
-            "topic": "jobs",
-            "event": event,
-            "data": {
-                "uuid": job.uuid,
-                "sequence_number": job.sequence_number,
-                "state": job.state,
-            },
-        })
+        await event_manager.broadcast(
+            {
+                "topic": "jobs",
+                "event": event,
+                "data": {
+                    "uuid": job.uuid,
+                    "sequence_number": job.sequence_number,
+                    "state": job.state,
+                    "progress": job.progress,
+                },
+            }
+        )
         return
 
     logger.warning("db_changes/jobs: unknown event type '%s'", event)
@@ -94,31 +105,43 @@ async def _handle_blueprints_change(data: dict) -> None:
         return
 
     if event == "delete":
-        await event_manager.broadcast({"topic": "blueprints", "event": "delete", "data": {"uuid": uuid}})
+        await event_manager.broadcast(
+            {"topic": "blueprints", "event": "delete", "data": {"uuid": uuid}}
+        )
         return
 
     if event in ("insert", "update"):
         async with AsyncSessionLocal() as session:
             row = await session.execute(
-                select(Blueprint.uuid, Blueprint.executor, Blueprint.command, Blueprint.description)
-                .where(Blueprint.uuid == uuid)
+                select(
+                    Blueprint.uuid,
+                    Blueprint.executor,
+                    Blueprint.command,
+                    Blueprint.description,
+                ).where(Blueprint.uuid == uuid)
             )
             bp = row.first()
 
         if bp is None:
-            logger.debug("db_changes/blueprints: blueprint %s not found after %s (already deleted?)", uuid, event)
+            logger.debug(
+                "db_changes/blueprints: blueprint %s not found after %s (already deleted?)",
+                uuid,
+                event,
+            )
             return
 
-        await event_manager.broadcast({
-            "topic": "blueprints",
-            "event": event,
-            "data": {
-                "uuid": bp.uuid,
-                "executor": bp.executor,
-                "command": bp.command,
-                "description": bp.description,
-            },
-        })
+        await event_manager.broadcast(
+            {
+                "topic": "blueprints",
+                "event": event,
+                "data": {
+                    "uuid": bp.uuid,
+                    "executor": bp.executor,
+                    "command": bp.command,
+                    "description": bp.description,
+                },
+            }
+        )
         return
 
     logger.warning("db_changes/blueprints: unknown event type '%s'", event)

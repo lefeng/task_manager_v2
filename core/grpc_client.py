@@ -34,6 +34,7 @@ async def grpc_lifespan():
     global _channel, _stub
     try:
         from grpc_gen import job_runner_pb2_grpc
+
         _channel = grpc.aio.insecure_channel(settings.runner_grpc_addr)
         _stub = job_runner_pb2_grpc.RDSJobRunnerStub(_channel)
         logger.info("gRPC channel open → %s", settings.runner_grpc_addr)
@@ -100,13 +101,16 @@ async def _consume_stream(job_uuid: str) -> None:
                 await job_service.apply_status_update(db, job_uuid, update)
 
             # Push to WebSocket clients
-            await job_status_manager.broadcast(job_uuid, {
-                "uuid": job_uuid,
-                "state": update.state,
-                "progress": update.progress,
-                "paused": update.paused,
-                "task_statuses": list(update.task_statuses),
-            })
+            await job_status_manager.broadcast(
+                job_uuid,
+                {
+                    "uuid": job_uuid,
+                    "state": update.state,
+                    "progress": update.progress,
+                    "paused": update.paused,
+                    "task_statuses": list(update.task_statuses),
+                },
+            )
 
     except grpc.aio.AioRpcError as exc:
         logger.warning("Stream ended for job %s: %s", job_uuid, exc.code())
@@ -118,7 +122,9 @@ async def _consume_stream(job_uuid: str) -> None:
                 job_service.JobState.FAILED,
                 job_service.JobState.ABORTED,
             ):
-                logger.warning("Marking job %s FAILED due to lost runner stream", job_uuid)
+                logger.warning(
+                    "Marking job %s FAILED due to lost runner stream", job_uuid
+                )
                 await job_service.mark_failed(db, job_uuid)
     except asyncio.CancelledError:
         logger.debug("Stream cancelled for job %s", job_uuid)

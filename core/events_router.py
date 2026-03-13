@@ -10,7 +10,7 @@ Message format:
     {"topic": "jobs"|"blueprints", "event": "insert"|"update"|"delete", "data": {...}}
 
 data fields by topic:
-  jobs       insert/update — uuid, sequence_number, state
+  jobs       insert/update — uuid, sequence_number, state, progress
   blueprints insert/update — uuid, executor, command, description
   either     delete        — uuid only (row is already gone)
 """

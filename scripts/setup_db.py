@@ -38,7 +38,11 @@ async def create_database() -> None:
     """Connect to the 'postgres' maintenance DB and create taskman if missing."""
     db_name = settings.database_url.rsplit("/", 1)[-1]
     # asyncpg needs the raw URL without the +asyncpg dialect prefix
-    raw_url = make_url(_maintenance_url(settings.database_url)).set(drivername="postgresql").render_as_string(hide_password=False)
+    raw_url = (
+        make_url(_maintenance_url(settings.database_url))
+        .set(drivername="postgresql")
+        .render_as_string(hide_password=False)
+    )
 
     conn = await asyncpg.connect(raw_url)
     try:
@@ -67,7 +71,9 @@ async def setup_triggers() -> None:
         # ── trigger functions ──────────────────────────────────────────────────
 
         # Generic function for top-level tables.  TG_ARGV[0] = topic name.
-        await conn.execute(text("""
+        await conn.execute(
+            text(
+                """
             CREATE OR REPLACE FUNCTION notify_table_change()
             RETURNS trigger AS $$
             DECLARE
@@ -81,10 +87,14 @@ async def setup_triggers() -> None:
                 RETURN NULL;
             END;
             $$ LANGUAGE plpgsql;
-        """))
+        """
+            )
+        )
 
         # job_arguments → bubbles up to the jobs topic as an 'update'.
-        await conn.execute(text("""
+        await conn.execute(
+            text(
+                """
             CREATE OR REPLACE FUNCTION notify_job_argument_change()
             RETURNS trigger AS $$
             DECLARE
@@ -98,10 +108,14 @@ async def setup_triggers() -> None:
                 RETURN NULL;
             END;
             $$ LANGUAGE plpgsql;
-        """))
+        """
+            )
+        )
 
         # blueprint_arguments → bubbles up to the blueprints topic as an 'update'.
-        await conn.execute(text("""
+        await conn.execute(
+            text(
+                """
             CREATE OR REPLACE FUNCTION notify_blueprint_argument_change()
             RETURNS trigger AS $$
             DECLARE
@@ -115,45 +129,72 @@ async def setup_triggers() -> None:
                 RETURN NULL;
             END;
             $$ LANGUAGE plpgsql;
-        """))
+        """
+            )
+        )
 
         # ── drop old triggers ──────────────────────────────────────────────────
         await conn.execute(text("DROP TRIGGER IF EXISTS jobs_notify ON jobs;"))
-        await conn.execute(text("DROP TRIGGER IF EXISTS blueprints_notify ON blueprints;"))
-        await conn.execute(text("DROP TRIGGER IF EXISTS job_arguments_notify ON job_arguments;"))
-        await conn.execute(text("DROP TRIGGER IF EXISTS blueprint_arguments_notify ON blueprint_arguments;"))
+        await conn.execute(
+            text("DROP TRIGGER IF EXISTS blueprints_notify ON blueprints;")
+        )
+        await conn.execute(
+            text("DROP TRIGGER IF EXISTS job_arguments_notify ON job_arguments;")
+        )
+        await conn.execute(
+            text(
+                "DROP TRIGGER IF EXISTS blueprint_arguments_notify ON blueprint_arguments;"
+            )
+        )
 
         # ── create triggers ────────────────────────────────────────────────────
 
-        # jobs: selective columns only — progress/paused/stopped are updated by
-        # the gRPC stream consumer and broadcast via JobWSManager instead.
-        await conn.execute(text("""
+        # jobs: selective columns only — paused/stopped are not watched because
+        # they're managed internally alongside state; progress is watched so
+        # clients receive updates via the events channel.
+        await conn.execute(
+            text(
+                """
             CREATE TRIGGER jobs_notify
-            AFTER INSERT OR UPDATE OF uuid, sequence_number, state OR DELETE ON jobs
+            AFTER INSERT OR UPDATE OF uuid, sequence_number, state, progress OR DELETE ON jobs
             FOR EACH ROW EXECUTE FUNCTION notify_table_change('jobs');
-        """))
+        """
+            )
+        )
 
         # blueprints: fire on any change (creates, edits, deletes are all rare).
-        await conn.execute(text("""
+        await conn.execute(
+            text(
+                """
             CREATE TRIGGER blueprints_notify
             AFTER INSERT OR UPDATE OR DELETE ON blueprints
             FOR EACH ROW EXECUTE FUNCTION notify_table_change('blueprints');
-        """))
+        """
+            )
+        )
 
         # job_arguments: UPDATE/DELETE only — INSERT is skipped because arguments are
         # written at job creation time; the parent jobs INSERT event already covers that.
-        await conn.execute(text("""
+        await conn.execute(
+            text(
+                """
             CREATE TRIGGER job_arguments_notify
             AFTER UPDATE OR DELETE ON job_arguments
             FOR EACH ROW EXECUTE FUNCTION notify_job_argument_change();
-        """))
+        """
+            )
+        )
 
         # blueprint_arguments: UPDATE/DELETE only — same reasoning as job_arguments.
-        await conn.execute(text("""
+        await conn.execute(
+            text(
+                """
             CREATE TRIGGER blueprint_arguments_notify
             AFTER UPDATE OR DELETE ON blueprint_arguments
             FOR EACH ROW EXECUTE FUNCTION notify_blueprint_argument_change();
-        """))
+        """
+            )
+        )
 
     print("Triggers created.")
 
@@ -176,6 +217,8 @@ async def setup(drop: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--drop", action="store_true", help="Drop all tables first (DESTROYS DATA)")
+    parser.add_argument(
+        "--drop", action="store_true", help="Drop all tables first (DESTROYS DATA)"
+    )
     args = parser.parse_args()
     asyncio.run(setup(drop=args.drop))

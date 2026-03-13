@@ -3,8 +3,15 @@ from datetime import datetime, timezone
 from enum import IntEnum
 
 from sqlalchemy import (
-    String, Text, DateTime, ForeignKey, Integer,
-    JSON, Float, Boolean, Sequence,
+    String,
+    Text,
+    DateTime,
+    ForeignKey,
+    Integer,
+    JSON,
+    Float,
+    Boolean,
+    Sequence,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -80,9 +87,7 @@ class JobArgument(Base):
     __tablename__ = "job_arguments"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    job_uuid: Mapped[str] = mapped_column(
-        ForeignKey("jobs.uuid", ondelete="CASCADE")
-    )
+    job_uuid: Mapped[str] = mapped_column(ForeignKey("jobs.uuid", ondelete="CASCADE"))
     name: Mapped[str] = mapped_column(String(255))
     value: Mapped[str] = mapped_column(Text, default="")
 
