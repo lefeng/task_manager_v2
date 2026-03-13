@@ -171,18 +171,18 @@ async def apply_status_update(db: AsyncSession, job_uuid: str, update) -> Job | 
 
     new_state = update.state
 
-    try:
-        _assert_transition(job.state, new_state)
-    except ValueError:
-        # Runner may resend the current state on every tick — only log if truly unexpected
-        if job.state != new_state:
+    same_state = job.state == new_state
+    if not same_state:
+        try:
+            _assert_transition(job.state, new_state)
+        except ValueError:
             logger.debug(
                 "Ignoring invalid transition %s → %s for job %s",
                 JobState(job.state).name,
                 new_state,
                 job_uuid,
             )
-        return job
+            return job
 
     job.state = new_state
     job.progress = round(update.progress, 2)
