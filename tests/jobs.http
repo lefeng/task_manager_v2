@@ -30,13 +30,8 @@ GET {{baseUrl}}:5000/api/v2/jobs
 Accept: application/json
 
 
-### List jobs with state filter (QUEQUEUED=1)
-GET {{baseUrl}}:5000/api/v2/jobs?state=1
-Accept: application/json
-
-
-### List jobs with state filter (RUNNING=2, PAUSED=3)
-GET {{baseUrl}}:5000/api/v2/jobs?state=2&state=3
+### List jobs with state filter (RUNNING=2)
+GET {{baseUrl}}:5000/api/v2/jobs?state=2
 Accept: application/json
 
 
@@ -169,28 +164,28 @@ Content-Type: application/json
 ### ── Get / delete a specific job ─────────────────────────────────────────────
 
 ### Get job by UUID (replace with UUID from a create response above)
-GET {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c
+GET {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98
 Accept: application/json
 
 
 ### Delete job (only allowed when NOT_STARTED or terminal)
-DELETE {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c
+DELETE {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98
 
 
 ### ── Run / abort / trigger ───────────────────────────────────────────────────
 
 ### Run job (queue → execute on runner)
-POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/run
+POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/run
 Content-Type: application/json
 
 
 ### Abort job
-POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/abort
+POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/abort
 Content-Type: application/json
 
 
 ### Trigger event: pause
-POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
 Content-Type: application/json
 
 {
@@ -200,7 +195,7 @@ Content-Type: application/json
 
 
 ### Trigger event: stop
-POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
 Content-Type: application/json
 
 {
@@ -210,7 +205,7 @@ Content-Type: application/json
 
 
 ### Trigger event: resume
-POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
 Content-Type: application/json
 
 {
@@ -220,7 +215,7 @@ Content-Type: application/json
 
 
 ### Trigger custom event with arguments
-POST {{baseUrl}}:5000/api/v2/jobs/bc8da622-8229-46c6-bd28-844fa7ec954c/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
 Content-Type: application/json
 
 {

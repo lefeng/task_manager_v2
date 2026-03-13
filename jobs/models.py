@@ -20,9 +20,7 @@ def utcnow() -> datetime:
 
 class JobState(IntEnum):
     NOT_STARTED = 0
-    QUEUED = 1
     RUNNING = 2
-    PAUSED = 3
     ABORTED = 4
     SUCCESS = 5
     FAILED = 6

@@ -6,7 +6,7 @@ REST endpoints:
   POST   /api/v2/jobs                  — create job from blueprint
   GET    /api/v2/jobs/{uuid}           — get job
   DELETE /api/v2/jobs/{uuid}           — delete job
-  POST   /api/v2/jobs/{uuid}/run       — queue + execute job on runner
+  POST   /api/v2/jobs/{uuid}/run       — execute job on runner
   POST   /api/v2/jobs/{uuid}/abort     — abort running job
   POST   /api/v2/jobs/{uuid}/trigger   — send event to running job (pause/resume/custom)
 
@@ -80,8 +80,7 @@ async def delete_job(uuid: str, db: AsyncSession = Depends(get_db)):
 @router.post("/{uuid}/run", response_model=schemas.Job)
 async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
     """
-    Queue the job in the DB, call gRPC execute on the runner,
-    then open a background stream to receive status updates.
+    Call gRPC execute on the runner, then open a background stream to receive status updates.
 
     If the job is already RUNNING, checks whether it is actually present on
     the runner — if not, marks it FAILED (stale orphan detection).
@@ -110,8 +109,6 @@ async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
             raise
         except Exception as exc:
             logger.warning("Could not check runner jobs for stale detection: %s", exc)
-
-    job = await service.queue_job(db, uuid)
 
     # Cast argument values to their blueprint-declared types before sending
     typed_args = service.build_typed_arguments(job)
@@ -144,7 +141,7 @@ async def abort_job(uuid: str, db: AsyncSession = Depends(get_db)):
     """
     Abort a job.
     - NOT_STARTED: DB-only, no gRPC call needed (job never reached the runner).
-    - QUEUED / RUNNING / PAUSED: call gRPC abort then update DB.
+    - RUNNING: call gRPC abort then update DB.
     """
     from grpc_gen import job_runner_pb2
 
@@ -212,11 +209,7 @@ async def jobs_ws_global(ws: WebSocket, db: AsyncSession = Depends(get_db)):
     active = await service.get_all(
         db,
         limit=500,
-        states=[
-            service.JobState.QUEUED,
-            service.JobState.RUNNING,
-            service.JobState.PAUSED,
-        ],
+        states=[service.JobState.RUNNING],
     )
     for job in active:
         await ws.send_json(schemas.Job.model_validate(job).model_dump(mode="json"))

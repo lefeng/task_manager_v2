@@ -56,10 +56,8 @@ def build_typed_arguments(job: Job) -> dict:
 
 # Valid state transitions: current → set of allowed next states
 _TRANSITIONS: dict[int, set[int]] = {
-    JobState.NOT_STARTED: {JobState.QUEUED, JobState.ABORTED},
-    JobState.QUEUED:      {JobState.RUNNING, JobState.ABORTED},
-    JobState.RUNNING:     {JobState.PAUSED, JobState.SUCCESS, JobState.FAILED, JobState.ABORTED},
-    JobState.PAUSED:      {JobState.RUNNING, JobState.ABORTED},
+    JobState.NOT_STARTED: {JobState.RUNNING, JobState.ABORTED},
+    JobState.RUNNING:     {JobState.SUCCESS, JobState.FAILED, JobState.ABORTED},
     JobState.ABORTED:     set(),
     JobState.SUCCESS:     set(),
     JobState.FAILED:      set(),
@@ -124,24 +122,12 @@ async def create(db: AsyncSession, data: schemas.JobCreate) -> Job:
 
 
 async def delete(db: AsyncSession, job: Job) -> None:
-    if job.state in (JobState.QUEUED, JobState.RUNNING, JobState.PAUSED):
+    if job.state == JobState.RUNNING:
         raise ValueError(
             f"Cannot delete job {job.uuid} in state {JobState(job.state).name} — abort it first"
         )
     await db.delete(job)
     await db.commit()
-
-
-async def queue_job(db: AsyncSession, uuid: str) -> Job:
-    """Transition job to QUEUED. Called before sending gRPC execute."""
-    job = await db.get(Job, uuid)
-    if not job:
-        raise ValueError(f"Job {uuid} not found")
-    _assert_transition(job.state, JobState.QUEUED)
-    job.state = JobState.QUEUED
-    await db.commit()
-    await db.refresh(job)
-    return job
 
 
 async def mark_failed(db: AsyncSession, uuid: str) -> Job | None:
@@ -180,11 +166,7 @@ async def apply_status_update(db: AsyncSession, job_uuid: str, update) -> Job | 
         logger.warning("apply_status_update: job %s not found", job_uuid)
         return None
 
-    # Runner has no PAUSED TaskState — it sends RUNNING + paused=True.
-    # Convert that to our explicit PAUSED state.
     new_state = update.state
-    if new_state == JobState.RUNNING and update.paused:
-        new_state = JobState.PAUSED
 
     try:
         _assert_transition(job.state, new_state)
