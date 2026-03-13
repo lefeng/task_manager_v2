@@ -149,14 +149,11 @@ async def setup_triggers() -> None:
 
         # ── create triggers ────────────────────────────────────────────────────
 
-        # jobs: selective columns only — paused/stopped are not watched because
-        # they're managed internally alongside state; progress is watched so
-        # clients receive updates via the events channel.
         await conn.execute(
             text(
                 """
             CREATE TRIGGER jobs_notify
-            AFTER INSERT OR UPDATE OF uuid, sequence_number, state, progress OR DELETE ON jobs
+            AFTER INSERT OR UPDATE OF uuid, sequence_number, state, progress, paused, stopped OR DELETE ON jobs
             FOR EACH ROW EXECUTE FUNCTION notify_table_change('jobs');
         """
             )

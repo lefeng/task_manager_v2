@@ -17,7 +17,7 @@ Message format sent to WebSocket clients:
         "event": "insert" | "update" | "delete",
         "data": {
             # jobs insert/update:
-            "uuid": "...", "sequence_number": 42, "state": 2, "progress": 0.45
+            "uuid": "...", "sequence_number": 42, "state": 2, "progress": 0.45, "paused": false, "stopped": false
             # blueprints insert/update:
             "uuid": "...", "executor": "...", "command": "...", "description": "..."
             # delete (either topic):
@@ -65,7 +65,7 @@ async def _handle_jobs_change(data: dict) -> None:
     if event in ("insert", "update"):
         async with AsyncSessionLocal() as session:
             row = await session.execute(
-                select(Job.uuid, Job.sequence_number, Job.state, Job.progress).where(
+                select(Job.uuid, Job.sequence_number, Job.state, Job.progress, Job.paused, Job.stopped).where(
                     Job.uuid == uuid
                 )
             )
@@ -88,6 +88,8 @@ async def _handle_jobs_change(data: dict) -> None:
                     "sequence_number": job.sequence_number,
                     "state": job.state,
                     "progress": job.progress,
+                    "paused": job.paused,
+                    "stopped": job.stopped,
                 },
             }
         )
