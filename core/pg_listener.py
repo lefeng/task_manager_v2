@@ -20,6 +20,7 @@ from collections.abc import Coroutine
 from typing import Callable
 
 import asyncpg
+from sqlalchemy.engine import make_url
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +77,7 @@ class PGListener:
 
     async def _connect_and_listen(self) -> None:
         # asyncpg uses plain postgresql:// — strip the SQLAlchemy dialect prefix
-        raw_dsn = self._dsn.replace("postgresql+asyncpg://", "postgresql://")
+        raw_dsn = make_url(self._dsn).set(drivername="postgresql").render_as_string(hide_password=False)
         self._conn = await asyncpg.connect(raw_dsn)
         logger.info("PGListener connected, channels: %s", self._channels)
 
@@ -106,7 +107,7 @@ class PGListener:
             )
             return
 
-        asyncio.get_event_loop().create_task(
+        asyncio.get_running_loop().create_task(
             self._dispatch(channel, data),
             name=f"pg_dispatch:{channel}",
         )

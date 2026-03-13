@@ -88,7 +88,7 @@ async def _consume_stream(job_uuid: str) -> None:
     from grpc_gen import job_runner_pb2
     from core.database import AsyncSessionLocal
     from jobs import service as job_service
-    from jobs.ws_manager import manager
+    from jobs.job_status_manager import job_status_manager
 
     stub = get_stub()
     request = job_runner_pb2.StatusStreamRequest(job_uuid=job_uuid)
@@ -100,7 +100,7 @@ async def _consume_stream(job_uuid: str) -> None:
                 await job_service.apply_status_update(db, job_uuid, update)
 
             # Push to WebSocket clients
-            await manager.broadcast(job_uuid, {
+            await job_status_manager.broadcast(job_uuid, {
                 "uuid": job_uuid,
                 "state": update.state,
                 "progress": update.progress,

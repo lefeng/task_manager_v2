@@ -15,16 +15,18 @@ cython_modules = [
     "blueprints/service.py",
     "core/config.py",
     "core/database.py",
+    "core/event_manager.py",
+    "core/events_router.py",
     "core/grpc_client.py",
     "core/pg_listener.py",
     "grpc_gen/job_runner_pb2.py",
     "grpc_gen/job_runner_pb2_grpc.py",
     "jobs/events.py",
+    "jobs/job_status_manager.py",
     "jobs/models.py",
     "jobs/router.py",
     "jobs/schemas.py",
     "jobs/service.py",
-    "jobs/ws_manager.py",
 ]
 
 

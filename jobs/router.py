@@ -2,17 +2,17 @@
 Jobs router.
 
 REST endpoints:
-  GET    /api/v2/jobs              — list jobs
-  POST   /api/v2/jobs              — create job from blueprint
-  GET    /api/v2/jobs/{uuid}       — get job
-  DELETE /api/v2/jobs/{uuid}       — delete job
-  POST   /api/v2/jobs/{uuid}/run   — queue + execute job on runner
-  POST   /api/v2/jobs/{uuid}/abort — abort running job
-  POST   /api/v2/jobs/{uuid}/trigger — send event to running job (pause/resume/custom)
+  GET    /api/v2/jobs                  — list jobs
+  POST   /api/v2/jobs                  — create job from blueprint
+  GET    /api/v2/jobs/{uuid}           — get job
+  DELETE /api/v2/jobs/{uuid}           — delete job
+  POST   /api/v2/jobs/{uuid}/run       — queue + execute job on runner
+  POST   /api/v2/jobs/{uuid}/abort     — abort running job
+  POST   /api/v2/jobs/{uuid}/trigger   — send event to running job (pause/resume/custom)
 
 WebSocket:
-  WS     /api/v2/jobs/ws          — real-time stream for ALL running jobs
-  WS     /api/v2/jobs/{uuid}/ws   — real-time status stream for a single job
+  WS  /api/v2/jobs/ws                 — gRPC stream: live status updates for ALL running jobs
+  WS  /api/v2/jobs/{uuid}/ws          — gRPC stream: live status updates for a single job
 """
 
 import json
@@ -25,7 +25,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.database import get_db
 from core.grpc_client import get_stub, start_job_stream, cancel_job_stream
 from jobs import schemas, service
-from jobs.ws_manager import manager, event_manager
+from jobs.job_status_manager import job_status_manager
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -198,28 +198,6 @@ async def trigger_job(
 
 # ── WebSocket ─────────────────────────────────────────────────────────────────
 
-@router.websocket("/events/ws")
-async def jobs_events_ws(ws: WebSocket):
-    """
-    Database-level job change stream via PostgreSQL LISTEN/NOTIFY.
-
-    Fires on every INSERT, UPDATE, or DELETE on the jobs table — regardless
-    of which code path triggered the change.
-
-    Message format:
-        {"topic": "jobs", "event": "insert"|"update"|"delete",
-         "data": {"uuid": "...", "sequence_number": 42, "state": 2}}
-
-    For deletes, only "uuid" is present in "data" (the row is already gone).
-    """
-    await event_manager.connect(ws)
-    try:
-        while True:
-            await ws.receive_text()
-    except WebSocketDisconnect:
-        event_manager.disconnect(ws)
-
-
 @router.websocket("/ws")
 async def jobs_ws_global(ws: WebSocket, db: AsyncSession = Depends(get_db)):
     """
@@ -228,7 +206,7 @@ async def jobs_ws_global(ws: WebSocket, db: AsyncSession = Depends(get_db)):
     On connect: sends the current state of every non-terminal job.
     Then: receives push updates whenever any job changes state.
     """
-    await manager.connect_global(ws)
+    await job_status_manager.connect_global(ws)
 
     # Snapshot all active (non-terminal) jobs immediately on connect
     active = await service.get_all(
@@ -247,7 +225,7 @@ async def jobs_ws_global(ws: WebSocket, db: AsyncSession = Depends(get_db)):
         while True:
             await ws.receive_text()
     except WebSocketDisconnect:
-        manager.disconnect_global(ws)
+        job_status_manager.disconnect_global(ws)
 
 
 @router.websocket("/{uuid}/ws")
@@ -263,7 +241,7 @@ async def job_ws(uuid: str, ws: WebSocket, db: AsyncSession = Depends(get_db)):
         await ws.close(code=4004, reason="Job not found")
         return
 
-    await manager.connect(uuid, ws)
+    await job_status_manager.connect(uuid, ws)
 
     # Send current state immediately on connect
     await ws.send_json(schemas.Job.model_validate(job).model_dump(mode="json"))
@@ -273,4 +251,4 @@ async def job_ws(uuid: str, ws: WebSocket, db: AsyncSession = Depends(get_db)):
             # Keep connection alive; client can send pings as text
             await ws.receive_text()
     except WebSocketDisconnect:
-        manager.disconnect(uuid, ws)
+        job_status_manager.disconnect(uuid, ws)

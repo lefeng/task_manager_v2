@@ -6,7 +6,7 @@ from blueprints import schemas
 
 
 async def get_all(db: AsyncSession) -> list[Blueprint]:
-    result = await db.execute(select(Blueprint).order_by(Blueprint.created_at.desc()))
+    result = await db.execute(select(Blueprint).order_by(Blueprint.created_at.asc()))
     return result.scalars().all()
 
 
