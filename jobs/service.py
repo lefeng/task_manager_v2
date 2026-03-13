@@ -87,7 +87,7 @@ async def get_all(
         q = q.where(Job.state.in_(states))
     if from_sequence_number is not None:
         q = q.where(Job.sequence_number >= from_sequence_number)
-    q = q.order_by(Job.sequence_number.desc()).limit(limit).offset(offset)
+    q = q.order_by(Job.sequence_number.asc()).limit(limit).offset(offset)
     result = await db.execute(q)
     return result.scalars().all()
 
