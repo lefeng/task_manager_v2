@@ -53,3 +53,4 @@ data/ecs/*.ecs
 # Misc
 .DS_Store
 Thumbs.db
+.env

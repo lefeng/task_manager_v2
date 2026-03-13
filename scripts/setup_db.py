@@ -140,17 +140,18 @@ async def setup_triggers() -> None:
             FOR EACH ROW EXECUTE FUNCTION notify_table_change('blueprints');
         """))
 
-        # job_arguments: any change is relevant; bubble up to jobs topic.
+        # job_arguments: UPDATE/DELETE only — INSERT is skipped because arguments are
+        # written at job creation time; the parent jobs INSERT event already covers that.
         await conn.execute(text("""
             CREATE TRIGGER job_arguments_notify
-            AFTER INSERT OR UPDATE OR DELETE ON job_arguments
+            AFTER UPDATE OR DELETE ON job_arguments
             FOR EACH ROW EXECUTE FUNCTION notify_job_argument_change();
         """))
 
-        # blueprint_arguments: any change is relevant; bubble up to blueprints topic.
+        # blueprint_arguments: UPDATE/DELETE only — same reasoning as job_arguments.
         await conn.execute(text("""
             CREATE TRIGGER blueprint_arguments_notify
-            AFTER INSERT OR UPDATE OR DELETE ON blueprint_arguments
+            AFTER UPDATE OR DELETE ON blueprint_arguments
             FOR EACH ROW EXECUTE FUNCTION notify_blueprint_argument_change();
         """))
 
