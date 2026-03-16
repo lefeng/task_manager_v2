@@ -60,10 +60,16 @@ def build_typed_arguments(job: Job) -> dict:
 # Valid state transitions: current → set of allowed next states
 _TRANSITIONS: dict[int, set[int]] = {
     JobState.NOT_STARTED: {JobState.RUNNING, JobState.ABORTED},
-    JobState.RUNNING: {JobState.SUCCESS, JobState.FAILED, JobState.ABORTED},
+    JobState.RUNNING: {
+        JobState.SUCCESS,
+        JobState.FAILED,
+        JobState.ABORTED,
+        JobState.UNKNOWN,
+    },
     JobState.ABORTED: set(),
     JobState.SUCCESS: set(),
     JobState.FAILED: set(),
+    JobState.UNKNOWN: set(),
 }
 
 
@@ -87,9 +93,10 @@ async def get_all(
         q = q.where(Job.state.in_(states))
     if from_sequence_number is not None:
         q = q.where(Job.sequence_number >= from_sequence_number)
-    q = q.order_by(Job.sequence_number.asc()).limit(limit).offset(offset)
+    q = q.order_by(Job.sequence_number.desc()).limit(limit).offset(offset)
     result = await db.execute(q)
-    return result.scalars().all()
+    jobs = result.scalars().all()
+    return sorted(jobs, key=lambda j: j.sequence_number)
 
 
 async def get(db: AsyncSession, uuid: str) -> Job | None:
@@ -145,6 +152,21 @@ async def mark_failed(db: AsyncSession, uuid: str) -> Job | None:
     return job
 
 
+async def mark_unknown(db: AsyncSession, uuid: str) -> Job | None:
+    """
+    Force a job to UNKNOWN — used when taskman was offline while the job
+    finished and the outcome can no longer be determined from the runner.
+    """
+    job = await db.get(Job, uuid)
+    if not job:
+        return None
+    job.state = JobState.UNKNOWN
+    job.date_finished = datetime.now(timezone.utc)
+    await db.commit()
+    await db.refresh(job)
+    return job
+
+
 async def abort_job(db: AsyncSession, uuid: str) -> Job:
     """Transition job to ABORTED. Called after gRPC abort."""
     job = await db.get(Job, uuid)
@@ -193,7 +215,12 @@ async def apply_status_update(db: AsyncSession, job_uuid: str, update) -> Job | 
     now = datetime.now(timezone.utc)
     if new_state == JobState.RUNNING and not job.date_started:
         job.date_started = now
-    if new_state in (JobState.SUCCESS, JobState.FAILED, JobState.ABORTED):
+    if new_state in (
+        JobState.SUCCESS,
+        JobState.FAILED,
+        JobState.ABORTED,
+        JobState.UNKNOWN,
+    ):
         job.date_finished = now
 
     await db.commit()

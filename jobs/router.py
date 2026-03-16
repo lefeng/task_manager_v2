@@ -69,6 +69,23 @@ async def create_job(data: schemas.JobCreate, db: AsyncSession = Depends(get_db)
         raise HTTPException(status_code=400, detail=str(exc))
 
 
+@router.post("/resync", response_model=schemas.ResyncResult)
+async def resync_jobs():
+    """
+    Manually trigger reconciliation of RUNNING jobs against the runner.
+
+    Useful after taskman restarts when some jobs may have finished on the runner
+    while taskman was offline. Idempotent — safe to call at any time.
+    """
+    from core.grpc_client import resync_running_jobs
+
+    try:
+        result = await resync_running_jobs()
+        return result
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Runner unavailable: {exc}")
+
+
 @router.get("/{uuid}", response_model=schemas.Job)
 async def get_job(uuid: str, db: AsyncSession = Depends(get_db)):
     job = await service.get(db, uuid)

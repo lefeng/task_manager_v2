@@ -31,6 +31,7 @@ class JobState(IntEnum):
     ABORTED = 4
     SUCCESS = 5
     FAILED = 6
+    UNKNOWN = 7  # Taskman was offline when the job finished; outcome is not known
 
 
 class Job(Base):

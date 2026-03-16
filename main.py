@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -6,11 +7,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 from core.database import engine
 from core.events_router import router as events_router
-from core.grpc_client import grpc_lifespan
+from core.grpc_client import grpc_lifespan, resync_running_jobs
 from core.pg_listener import pg_listener
 from blueprints.router import router as blueprints_router
 from jobs.router import router as jobs_router
 from jobs.events import handle_db_change
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -20,6 +23,10 @@ async def lifespan(app: FastAPI):
     pg_listener.add_handler(handle_db_change)
     await pg_listener.start(settings.database_url)
     async with grpc_lifespan():
+        try:
+            await resync_running_jobs()
+        except Exception as exc:
+            logger.warning("Startup resync failed (runner may be unavailable): %s", exc)
         yield
     await pg_listener.stop()
     await engine.dispose()

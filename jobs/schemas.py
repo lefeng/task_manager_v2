@@ -57,3 +57,8 @@ class Job(BaseModel):
 class TriggerRequest(BaseModel):
     event: str
     arguments: dict = {}
+
+
+class ResyncResult(BaseModel):
+    reattached: int
+    marked_unknown: int

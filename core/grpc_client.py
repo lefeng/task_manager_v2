@@ -52,6 +52,65 @@ async def grpc_lifespan():
         logger.info("gRPC channel closed")
 
 
+async def resync_running_jobs() -> dict:
+    """
+    Reconcile RUNNING jobs in the DB against the runner's live job list.
+
+    Called on startup and via the manual /resync endpoint to recover from
+    taskman downtime during which the runner may have finished jobs.
+
+    - Jobs still active on the runner  → reattach the status stream.
+    - Jobs not on the runner            → runner finished (outcome unknown),
+                                          mark UNKNOWN so they don't stay stuck.
+
+    Returns {"reattached": int, "marked_unknown": int}.
+    Raises if the runner is unreachable (caller decides whether to swallow).
+    """
+    from grpc_gen import job_runner_pb2
+    from core.database import AsyncSessionLocal
+    from jobs import service as job_service
+
+    stub = get_stub()
+
+    async with AsyncSessionLocal() as db:
+        running_jobs = await job_service.get_all(
+            db, limit=500, states=[job_service.JobState.RUNNING]
+        )
+
+    if not running_jobs:
+        logger.info("Resync: no RUNNING jobs in DB — nothing to do")
+        return {"reattached": 0, "marked_unknown": 0}
+
+    response = await stub.jobs(job_runner_pb2.JobsRequest())
+    active_on_runner = set(response.job_uuids)
+    logger.info(
+        "Resync: %d RUNNING job(s) in DB, %d active on runner",
+        len(running_jobs),
+        len(active_on_runner),
+    )
+
+    reattached = 0
+    marked_unknown = 0
+    for job in running_jobs:
+        if job.uuid in active_on_runner:
+            logger.info("Resync: reattaching stream for job %s", job.uuid)
+            await start_job_stream(job.uuid)
+            reattached += 1
+        else:
+            logger.warning(
+                "Resync: job %s is RUNNING in DB but absent from runner — marking UNKNOWN",
+                job.uuid,
+            )
+            async with AsyncSessionLocal() as db:
+                await job_service.mark_unknown(db, job.uuid)
+            marked_unknown += 1
+
+    logger.info(
+        "Resync complete: %d reattached, %d marked UNKNOWN", reattached, marked_unknown
+    )
+    return {"reattached": reattached, "marked_unknown": marked_unknown}
+
+
 async def start_job_stream(job_uuid: str) -> None:
     """
     Start a background asyncio task that consumes the runner's status stream
@@ -121,6 +180,7 @@ async def _consume_stream(job_uuid: str) -> None:
                 job_service.JobState.SUCCESS,
                 job_service.JobState.FAILED,
                 job_service.JobState.ABORTED,
+                job_service.JobState.UNKNOWN,
             ):
                 logger.warning(
                     "Marking job %s FAILED due to lost runner stream", job_uuid
@@ -137,5 +197,6 @@ async def _consume_stream(job_uuid: str) -> None:
                 job_service.JobState.SUCCESS,
                 job_service.JobState.FAILED,
                 job_service.JobState.ABORTED,
+                job_service.JobState.UNKNOWN,
             ):
                 await job_service.mark_failed(db, job_uuid)

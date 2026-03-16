@@ -164,28 +164,28 @@ Content-Type: application/json
 ### ── Get / delete a specific job ─────────────────────────────────────────────
 
 ### Get job by UUID (replace with UUID from a create response above)
-GET {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98
+GET {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775
 Accept: application/json
 
 
 ### Delete job (only allowed when NOT_STARTED or terminal)
-DELETE {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98
+DELETE {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775
 
 
 ### ── Run / abort / trigger ───────────────────────────────────────────────────
 
 ### Run job (queue → execute on runner)
-POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/run
+POST {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775/run
 Content-Type: application/json
 
 
 ### Abort job
-POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/abort
+POST {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775/abort
 Content-Type: application/json
 
 
 ### Trigger event: pause
-POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775/trigger
 Content-Type: application/json
 
 {
@@ -195,7 +195,7 @@ Content-Type: application/json
 
 
 ### Trigger event: stop
-POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775/trigger
 Content-Type: application/json
 
 {
@@ -205,7 +205,7 @@ Content-Type: application/json
 
 
 ### Trigger event: resume
-POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775/trigger
 Content-Type: application/json
 
 {
@@ -215,7 +215,7 @@ Content-Type: application/json
 
 
 ### Trigger custom event with arguments
-POST {{baseUrl}}:5000/api/v2/jobs/8570b4e2-2567-4509-a996-6db66268fd98/trigger
+POST {{baseUrl}}:5000/api/v2/jobs/e7dd92ce-3f9a-4dce-943d-a417dde47775/trigger
 Content-Type: application/json
 
 {
