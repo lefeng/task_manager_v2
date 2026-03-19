@@ -74,11 +74,13 @@ async def resync_running_jobs() -> dict:
 
     async with AsyncSessionLocal() as db:
         running_jobs = await job_service.get_all(
-            db, limit=500, states=[job_service.JobState.RUNNING]
+            db,
+            limit=500,
+            states=[job_service.JobState.QUEUED, job_service.JobState.RUNNING],
         )
 
     if not running_jobs:
-        logger.info("Resync: no RUNNING jobs in DB — nothing to do")
+        logger.info("Resync: no QUEUED/RUNNING jobs in DB — nothing to do")
         return {"reattached": 0, "marked_unknown": 0}
 
     response = await stub.jobs(job_runner_pb2.JobsRequest())

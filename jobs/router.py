@@ -122,8 +122,8 @@ async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
     if not job.blueprint:
         raise HTTPException(status_code=400, detail="Job has no associated blueprint")
 
-    # Stale orphan detection: job thinks it's RUNNING but runner has no record of it
-    if job.state == service.JobState.RUNNING:
+    # Stale orphan detection: job thinks it's QUEUED/RUNNING but runner has no record of it
+    if job.state in (service.JobState.QUEUED, service.JobState.RUNNING):
         try:
             stub = get_stub()
             running = await stub.jobs(job_runner_pb2.JobsRequest())
@@ -131,7 +131,7 @@ async def run_job(uuid: str, db: AsyncSession = Depends(get_db)):
                 await service.mark_failed(db, uuid)
                 raise HTTPException(
                     status_code=409,
-                    detail=f"Job {uuid} is marked RUNNING but is not present on the runner — marked FAILED",
+                    detail=f"Job {uuid} is marked {service.JobState(job.state).name} but is not present on the runner — marked FAILED",
                 )
         except HTTPException:
             raise

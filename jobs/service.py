@@ -59,7 +59,14 @@ def build_typed_arguments(job: Job) -> dict:
 
 # Valid state transitions: current → set of allowed next states
 _TRANSITIONS: dict[int, set[int]] = {
-    JobState.NOT_STARTED: {JobState.RUNNING, JobState.ABORTED},
+    JobState.NOT_STARTED: {JobState.QUEUED, JobState.RUNNING, JobState.ABORTED},
+    JobState.QUEUED: {
+        JobState.RUNNING,
+        JobState.SUCCESS,  # fast jobs may finish before a RUNNING update is polled
+        JobState.FAILED,
+        JobState.ABORTED,
+        JobState.UNKNOWN,
+    },
     JobState.RUNNING: {
         JobState.SUCCESS,
         JobState.FAILED,
@@ -132,7 +139,7 @@ async def create(db: AsyncSession, data: schemas.JobCreate) -> Job:
 
 
 async def delete(db: AsyncSession, job: Job) -> None:
-    if job.state == JobState.RUNNING:
+    if job.state in (JobState.QUEUED, JobState.RUNNING):
         raise ValueError(
             f"Cannot delete job {job.uuid} in state {JobState(job.state).name} — abort it first"
         )
@@ -213,7 +220,7 @@ async def apply_status_update(db: AsyncSession, job_uuid: str, update) -> Job | 
         job.stopped = True
 
     now = datetime.now(timezone.utc)
-    if new_state == JobState.RUNNING and not job.date_started:
+    if new_state in (JobState.QUEUED, JobState.RUNNING) and not job.date_started:
         job.date_started = now
     if new_state in (
         JobState.SUCCESS,

@@ -27,6 +27,7 @@ def utcnow() -> datetime:
 
 class JobState(IntEnum):
     NOT_STARTED = 0
+    QUEUED = 1  # Runner has accepted the job but execution hasn't started yet
     RUNNING = 2
     ABORTED = 4
     SUCCESS = 5
