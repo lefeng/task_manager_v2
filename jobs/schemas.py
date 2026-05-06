@@ -57,6 +57,7 @@ class Job(BaseModel):
 class TriggerRequest(BaseModel):
     event: str
     arguments: dict = {}
+    resources: list[str] = []
 
 
 class ResyncResult(BaseModel):

@@ -26,11 +26,7 @@ if _version_not_supported:
 
 
 class RDSJobRunnerStub(object):
-    """─────────────────────────────────────────────────────────────────────────────
-    Service
-    ─────────────────────────────────────────────────────────────────────────────
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -81,11 +77,7 @@ class RDSJobRunnerStub(object):
 
 
 class RDSJobRunnerServicer(object):
-    """─────────────────────────────────────────────────────────────────────────────
-    Service
-    ─────────────────────────────────────────────────────────────────────────────
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def Ping(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -130,9 +122,8 @@ class RDSJobRunnerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def StreamStatus(self, request, context):
-        """NEW: task_manager opens this stream after execute().
-        Runner pushes StatusUpdate messages until the job finishes.
-        Replaces the old REST PUT callback pattern.
+        """Replaces the REST PUT callback. task_manager opens this stream after
+        execute() and receives StatusUpdate messages until the job finishes.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -190,11 +181,7 @@ def add_RDSJobRunnerServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class RDSJobRunner(object):
-    """─────────────────────────────────────────────────────────────────────────────
-    Service
-    ─────────────────────────────────────────────────────────────────────────────
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def Ping(request,

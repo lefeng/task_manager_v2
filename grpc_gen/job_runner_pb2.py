@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10job_runner.proto\x12\njob_runner\"\r\n\x0bPingRequest\"\x1a\n\x0cPingResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\"k\n\x0e\x45xecuteRequest\x12\x16\n\x0e\x63lient_version\x18\x01 \x01(\t\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x0f\n\x07\x63ommand\x18\x03 \x01(\t\x12\x11\n\targuments\x18\x04 \x01(\t\x12\x0f\n\x07job_url\x18\x05 \x01(\t\"\"\n\x0f\x45xecuteResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x10\n\x0eLibraryRequest\"\"\n\x0fLibraryResponse\x12\x0f\n\x07library\x18\x01 \x03(\t\"\r\n\x0bJobsRequest\"!\n\x0cJobsResponse\x12\x11\n\tjob_uuids\x18\x01 \x03(\t\"D\n\x0eTriggerRequest\x12\x10\n\x08job_uuid\x18\x01 \x01(\t\x12\r\n\x05\x65vent\x18\x02 \x01(\t\x12\x11\n\targuments\x18\x03 \x01(\t\"\"\n\x0fTriggerResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1c\n\x0c\x41\x62ortRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\" \n\rAbortResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1d\n\rStatusRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\" \n\x0eStatusResponse\x12\x0e\n\x06status\x18\x01 \x03(\t\"\'\n\x13StatusStreamRequest\x12\x10\n\x08job_uuid\x18\x01 \x01(\t\"h\n\x0cStatusUpdate\x12\x10\n\x08job_uuid\x18\x01 \x01(\t\x12\r\n\x05state\x18\x02 \x01(\x05\x12\x10\n\x08progress\x18\x03 \x01(\x02\x12\x0e\n\x06paused\x18\x04 \x01(\x08\x12\x15\n\rtask_statuses\x18\x05 \x03(\t2\x9c\x04\n\x0cRDSJobRunner\x12\x39\n\x04Ping\x12\x17.job_runner.PingRequest\x1a\x18.job_runner.PingResponse\x12\x42\n\x07\x65xecute\x12\x1a.job_runner.ExecuteRequest\x1a\x1b.job_runner.ExecuteResponse\x12\x42\n\x07library\x12\x1a.job_runner.LibraryRequest\x1a\x1b.job_runner.LibraryResponse\x12\x39\n\x04jobs\x12\x17.job_runner.JobsRequest\x1a\x18.job_runner.JobsResponse\x12\x42\n\x07trigger\x12\x1a.job_runner.TriggerRequest\x1a\x1b.job_runner.TriggerResponse\x12<\n\x05\x61\x62ort\x12\x18.job_runner.AbortRequest\x1a\x19.job_runner.AbortResponse\x12?\n\x06status\x12\x19.job_runner.StatusRequest\x1a\x1a.job_runner.StatusResponse\x12K\n\x0cStreamStatus\x12\x1f.job_runner.StatusStreamRequest\x1a\x18.job_runner.StatusUpdate0\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10job_runner.proto\x12\njob_runner\"\r\n\x0bPingRequest\"\x0e\n\x0cPingResponse\"k\n\x0e\x45xecuteRequest\x12\x16\n\x0e\x63lient_version\x18\x01 \x01(\t\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x0f\n\x07\x63ommand\x18\x03 \x01(\t\x12\x11\n\targuments\x18\x04 \x01(\t\x12\x0f\n\x07job_url\x18\x05 \x01(\t\"\"\n\x0f\x45xecuteResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x10\n\x0eLibraryRequest\"\"\n\x0fLibraryResponse\x12\x0f\n\x07library\x18\x01 \x03(\t\"\r\n\x0bJobsRequest\"!\n\x0cJobsResponse\x12\x11\n\tjob_uuids\x18\x01 \x03(\t\"W\n\x0eTriggerRequest\x12\x10\n\x08job_uuid\x18\x01 \x01(\t\x12\r\n\x05\x65vent\x18\x02 \x01(\t\x12\x11\n\targuments\x18\x03 \x01(\t\x12\x11\n\tresources\x18\x04 \x03(\t\"\"\n\x0fTriggerResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1c\n\x0c\x41\x62ortRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\" \n\rAbortResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1d\n\rStatusRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\" \n\x0eStatusResponse\x12\x0e\n\x06status\x18\x01 \x03(\t\"\'\n\x13StatusStreamRequest\x12\x10\n\x08job_uuid\x18\x01 \x01(\t\"h\n\x0cStatusUpdate\x12\x10\n\x08job_uuid\x18\x01 \x01(\t\x12\r\n\x05state\x18\x02 \x01(\x05\x12\x10\n\x08progress\x18\x03 \x01(\x02\x12\x0e\n\x06paused\x18\x04 \x01(\x08\x12\x15\n\rtask_statuses\x18\x05 \x03(\t2\xac\x04\n\x0cRDSJobRunner\x12;\n\x04Ping\x12\x17.job_runner.PingRequest\x1a\x18.job_runner.PingResponse\"\x00\x12\x44\n\x07\x65xecute\x12\x1a.job_runner.ExecuteRequest\x1a\x1b.job_runner.ExecuteResponse\"\x00\x12\x44\n\x07library\x12\x1a.job_runner.LibraryRequest\x1a\x1b.job_runner.LibraryResponse\"\x00\x12;\n\x04jobs\x12\x17.job_runner.JobsRequest\x1a\x18.job_runner.JobsResponse\"\x00\x12\x44\n\x07trigger\x12\x1a.job_runner.TriggerRequest\x1a\x1b.job_runner.TriggerResponse\"\x00\x12>\n\x05\x61\x62ort\x12\x18.job_runner.AbortRequest\x1a\x19.job_runner.AbortResponse\"\x00\x12\x41\n\x06status\x12\x19.job_runner.StatusRequest\x1a\x1a.job_runner.StatusResponse\"\x00\x12M\n\x0cStreamStatus\x12\x1f.job_runner.StatusStreamRequest\x1a\x18.job_runner.StatusUpdate\"\x00\x30\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,35 +34,35 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PINGREQUEST']._serialized_start=32
   _globals['_PINGREQUEST']._serialized_end=45
   _globals['_PINGRESPONSE']._serialized_start=47
-  _globals['_PINGRESPONSE']._serialized_end=73
-  _globals['_EXECUTEREQUEST']._serialized_start=75
-  _globals['_EXECUTEREQUEST']._serialized_end=182
-  _globals['_EXECUTERESPONSE']._serialized_start=184
-  _globals['_EXECUTERESPONSE']._serialized_end=218
-  _globals['_LIBRARYREQUEST']._serialized_start=220
-  _globals['_LIBRARYREQUEST']._serialized_end=236
-  _globals['_LIBRARYRESPONSE']._serialized_start=238
-  _globals['_LIBRARYRESPONSE']._serialized_end=272
-  _globals['_JOBSREQUEST']._serialized_start=274
-  _globals['_JOBSREQUEST']._serialized_end=287
-  _globals['_JOBSRESPONSE']._serialized_start=289
-  _globals['_JOBSRESPONSE']._serialized_end=322
-  _globals['_TRIGGERREQUEST']._serialized_start=324
-  _globals['_TRIGGERREQUEST']._serialized_end=392
-  _globals['_TRIGGERRESPONSE']._serialized_start=394
-  _globals['_TRIGGERRESPONSE']._serialized_end=428
-  _globals['_ABORTREQUEST']._serialized_start=430
-  _globals['_ABORTREQUEST']._serialized_end=458
-  _globals['_ABORTRESPONSE']._serialized_start=460
-  _globals['_ABORTRESPONSE']._serialized_end=492
-  _globals['_STATUSREQUEST']._serialized_start=494
-  _globals['_STATUSREQUEST']._serialized_end=523
-  _globals['_STATUSRESPONSE']._serialized_start=525
-  _globals['_STATUSRESPONSE']._serialized_end=557
-  _globals['_STATUSSTREAMREQUEST']._serialized_start=559
-  _globals['_STATUSSTREAMREQUEST']._serialized_end=598
-  _globals['_STATUSUPDATE']._serialized_start=600
-  _globals['_STATUSUPDATE']._serialized_end=704
-  _globals['_RDSJOBRUNNER']._serialized_start=707
-  _globals['_RDSJOBRUNNER']._serialized_end=1247
+  _globals['_PINGRESPONSE']._serialized_end=61
+  _globals['_EXECUTEREQUEST']._serialized_start=63
+  _globals['_EXECUTEREQUEST']._serialized_end=170
+  _globals['_EXECUTERESPONSE']._serialized_start=172
+  _globals['_EXECUTERESPONSE']._serialized_end=206
+  _globals['_LIBRARYREQUEST']._serialized_start=208
+  _globals['_LIBRARYREQUEST']._serialized_end=224
+  _globals['_LIBRARYRESPONSE']._serialized_start=226
+  _globals['_LIBRARYRESPONSE']._serialized_end=260
+  _globals['_JOBSREQUEST']._serialized_start=262
+  _globals['_JOBSREQUEST']._serialized_end=275
+  _globals['_JOBSRESPONSE']._serialized_start=277
+  _globals['_JOBSRESPONSE']._serialized_end=310
+  _globals['_TRIGGERREQUEST']._serialized_start=312
+  _globals['_TRIGGERREQUEST']._serialized_end=399
+  _globals['_TRIGGERRESPONSE']._serialized_start=401
+  _globals['_TRIGGERRESPONSE']._serialized_end=435
+  _globals['_ABORTREQUEST']._serialized_start=437
+  _globals['_ABORTREQUEST']._serialized_end=465
+  _globals['_ABORTRESPONSE']._serialized_start=467
+  _globals['_ABORTRESPONSE']._serialized_end=499
+  _globals['_STATUSREQUEST']._serialized_start=501
+  _globals['_STATUSREQUEST']._serialized_end=530
+  _globals['_STATUSRESPONSE']._serialized_start=532
+  _globals['_STATUSRESPONSE']._serialized_end=564
+  _globals['_STATUSSTREAMREQUEST']._serialized_start=566
+  _globals['_STATUSSTREAMREQUEST']._serialized_end=605
+  _globals['_STATUSUPDATE']._serialized_start=607
+  _globals['_STATUSUPDATE']._serialized_end=711
+  _globals['_RDSJOBRUNNER']._serialized_start=714
+  _globals['_RDSJOBRUNNER']._serialized_end=1270
 # @@protoc_insertion_point(module_scope)

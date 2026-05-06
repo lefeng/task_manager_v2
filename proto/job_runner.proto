@@ -2,72 +2,86 @@ syntax = "proto3";
 
 package job_runner;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Service
-// ─────────────────────────────────────────────────────────────────────────────
-
 service RDSJobRunner {
-    rpc Ping       (PingRequest)          returns (PingResponse);
-    rpc execute    (ExecuteRequest)       returns (ExecuteResponse);
-    rpc library    (LibraryRequest)       returns (LibraryResponse);
-    rpc jobs       (JobsRequest)          returns (JobsResponse);
-    rpc trigger    (TriggerRequest)       returns (TriggerResponse);
-    rpc abort      (AbortRequest)         returns (AbortResponse);
-    rpc status     (StatusRequest)        returns (StatusResponse);
+    rpc Ping          (PingRequest)          returns (PingResponse)          {}
+    rpc execute       (ExecuteRequest)       returns (ExecuteResponse)       {}
+    rpc library       (LibraryRequest)       returns (LibraryResponse)       {}
+    rpc jobs          (JobsRequest)          returns (JobsResponse)          {}
+    rpc trigger       (TriggerRequest)       returns (TriggerResponse)       {}
+    rpc abort         (AbortRequest)         returns (AbortResponse)         {}
+    rpc status        (StatusRequest)        returns (StatusResponse)        {}
 
-    // NEW: task_manager opens this stream after execute().
-    // Runner pushes StatusUpdate messages until the job finishes.
-    // Replaces the old REST PUT callback pattern.
-    rpc StreamStatus  (StatusStreamRequest) returns (stream StatusUpdate);
+    // Replaces the REST PUT callback. task_manager opens this stream after
+    // execute() and receives StatusUpdate messages until the job finishes.
+    rpc StreamStatus  (StatusStreamRequest)  returns (stream StatusUpdate)   {}
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Existing messages (unchanged — backward compatible)
-// ─────────────────────────────────────────────────────────────────────────────
+message PingRequest {}
 
-message PingRequest  {}
-message PingResponse { bool ok = 1; }
+message PingResponse {}
+
 
 message ExecuteRequest {
-    string client_version = 1; // optional, leave empty
-    string uuid           = 2;
-    string command        = 3;
-    string arguments      = 4; // JSON string
-    string job_url        = 5; // legacy REST callback — leave empty when streaming
+    string client_version = 1;
+    string uuid = 2;
+    string command = 3;
+    string arguments = 4;
+    string job_url = 5;
 }
-message ExecuteResponse { bool success = 1; }
 
-message LibraryRequest  {}
-message LibraryResponse { repeated string library = 1; }
+message ExecuteResponse {
+    bool success = 1;
+}
 
-message JobsRequest  {}
-message JobsResponse { repeated string job_uuids = 1; }
+message LibraryRequest {}
+
+message LibraryResponse {
+    repeated string library = 1;
+}
+
+message JobsRequest {}
+
+message JobsResponse {
+    repeated string job_uuids = 1;
+}
 
 message TriggerRequest {
-    string job_uuid  = 1;
-    string event     = 2;
-    string arguments = 3; // JSON string
+    string job_uuid = 1;
+    string event = 2;
+    string arguments = 3;
+    repeated string resources = 4;  // optional — if non-empty, event only targets tasks on these resources
 }
-message TriggerResponse { bool success = 1; }
 
-message AbortRequest  { string uuid = 1; }
-message AbortResponse { bool success = 1; }
+message TriggerResponse {
+    bool success = 1;
+}
 
-message StatusRequest  { string uuid = 1; }
-message StatusResponse { repeated string status = 1; } // JSON list (legacy)
+message AbortRequest {
+    string uuid = 1; // optional — if empty, aborts all running jobs
+}
 
-// ─────────────────────────────────────────────────────────────────────────────
-// New streaming messages
-// ─────────────────────────────────────────────────────────────────────────────
+message AbortResponse {
+    bool success = 1;
+}
 
+message StatusRequest {
+    string uuid = 1;
+}
+
+message StatusResponse {
+    repeated string status = 1;
+}
+
+// Request to open a server-side status stream for a running job.
 message StatusStreamRequest {
     string job_uuid = 1;
 }
 
+// Pushed by runner to task_manager on every status change (replaces REST PUT).
 message StatusUpdate {
-    string job_uuid          = 1;
-    int32  state             = 2; // maps to JobState enum
-    float  progress          = 3; // 0.0 – 1.0
-    bool   paused            = 4;
-    repeated string task_statuses = 5; // JSON strings, one per task
+    string job_uuid              = 1;
+    int32  state                 = 2; // maps to taskman JobState: QUEUED=1 RUNNING=2 PAUSED=3 ABORTED=4 SUCCESS=5 FAILED=6
+    float  progress              = 3; // 0.0 – 1.0
+    bool   paused                = 4;
+    repeated string task_statuses = 5; // JSON strings, one per running task
 }

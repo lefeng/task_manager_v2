@@ -209,6 +209,7 @@ async def trigger_job(
                 job_uuid=uuid,
                 event=data.event,
                 arguments=json.dumps(data.arguments),
+                resources=data.resources,
             )
         )
     except Exception as exc:
