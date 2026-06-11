@@ -8,6 +8,10 @@ Usage (from project root):
 Or to seed from a JSON file (exported manually):
     python scripts/seed_blueprints.py --json /path/to/blueprints.json
 
+To also update existing blueprints so the JSON file is the source of truth
+(arguments are reconciled by name — added, updated, and removed to match):
+    python scripts/seed_blueprints.py --json /path/to/blueprints.json --sync
+
 The JSON format expected:
 [
   {
@@ -43,15 +47,76 @@ import blueprints.models  # noqa: F401 — register models
 import jobs.models  # noqa: F401 — register models
 
 
-async def seed_from_records(session: AsyncSession, records: list[dict]) -> None:
+def _assign(obj, field: str, value) -> bool:
+    """Set obj.field only if it differs. Returns True when a change was made."""
+    if getattr(obj, field) != value:
+        setattr(obj, field, value)
+        return True
+    return False
+
+
+def _sync_blueprint(existing: Blueprint, rec: dict) -> bool:
+    """Update an existing blueprint in place to match the JSON record.
+
+    Arguments are reconciled by name: updated if present, appended if new,
+    and removed if no longer in the record (delete-orphan cascade).
+    Returns True if anything changed.
+    """
+    changed = False
+    changed |= _assign(existing, "executor", rec.get("executor", ""))
+    changed |= _assign(existing, "command", rec.get("command", ""))
+    changed |= _assign(existing, "description", rec.get("description"))
+    changed |= _assign(existing, "definition", rec.get("definition") or {})
+    changed |= _assign(existing, "tags", rec.get("tags") or [])
+
+    desired = rec.get("arguments") or []
+    desired_names = {arg["name"] for arg in desired}
+    args_by_name = {a.name: a for a in existing.arguments}
+
+    for i, arg in enumerate(desired):
+        current = args_by_name.get(arg["name"])
+        if current is None:
+            existing.arguments.append(
+                BlueprintArgument(
+                    uuid=arg.get("uuid") or None,
+                    name=arg["name"],
+                    type=arg.get("type", "string"),
+                    description=arg.get("description"),
+                    ui=arg.get("ui") or {},
+                    order=arg.get("order", i),
+                )
+            )
+            changed = True
+        else:
+            changed |= _assign(current, "type", arg.get("type", "string"))
+            changed |= _assign(current, "description", arg.get("description"))
+            changed |= _assign(current, "ui", arg.get("ui") or {})
+            changed |= _assign(current, "order", arg.get("order", i))
+
+    for current in list(existing.arguments):
+        if current.name not in desired_names:
+            existing.arguments.remove(current)
+            changed = True
+
+    return changed
+
+
+async def seed_from_records(
+    session: AsyncSession, records: list[dict], sync: bool = False
+) -> None:
     inserted = 0
+    updated = 0
     skipped = 0
 
     for rec in records:
         existing = await session.get(Blueprint, rec["uuid"])
         if existing:
-            print(f"  skip (already exists): {rec['uuid']} — {rec.get('command')}")
-            skipped += 1
+            if sync and _sync_blueprint(existing, rec):
+                print(f"  update: {rec['uuid']} — {rec.get('executor')}:{rec.get('command')}")
+                updated += 1
+            else:
+                print(f"  skip (up to date): {rec['uuid']} — {rec.get('command')}")
+                skipped += 1
             continue
 
         bp = Blueprint(
@@ -78,10 +143,10 @@ async def seed_from_records(session: AsyncSession, records: list[dict]) -> None:
         print(f"  insert: {rec['uuid']} — {rec.get('executor')}:{rec.get('command')}")
 
     await session.commit()
-    print(f"\nDone. Inserted: {inserted}  Skipped: {skipped}")
+    print(f"\nDone. Inserted: {inserted}  Updated: {updated}  Skipped: {skipped}")
 
 
-async def seed_from_json(json_path: str) -> None:
+async def seed_from_json(json_path: str, sync: bool = False) -> None:
     data = json.loads(Path(json_path).read_text())
     if isinstance(data, dict):
         data = data.get("blueprints", list(data.values()))
@@ -89,11 +154,11 @@ async def seed_from_json(json_path: str) -> None:
     engine = create_async_engine(settings.database_url, echo=False)
     Session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
     async with Session() as session:
-        await seed_from_records(session, data)
+        await seed_from_records(session, data, sync=sync)
     await engine.dispose()
 
 
-async def seed_from_sqlite(sqlite_path: str) -> None:
+async def seed_from_sqlite(sqlite_path: str, sync: bool = False) -> None:
     import sqlite3
 
     conn = sqlite3.connect(sqlite_path)
@@ -148,7 +213,7 @@ async def seed_from_sqlite(sqlite_path: str) -> None:
     engine = create_async_engine(settings.database_url, echo=False)
     Session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
     async with Session() as session:
-        await seed_from_records(session, records)
+        await seed_from_records(session, records, sync=sync)
     await engine.dispose()
 
 
@@ -159,12 +224,17 @@ def main() -> None:
         "--sqlite", metavar="PATH", help="Path to old task_manager SQLite DB"
     )
     group.add_argument("--json", metavar="PATH", help="Path to blueprints JSON export")
+    parser.add_argument(
+        "--sync",
+        action="store_true",
+        help="Also update existing blueprints to match the source (upsert)",
+    )
     args = parser.parse_args()
 
     if args.sqlite:
-        asyncio.run(seed_from_sqlite(args.sqlite))
+        asyncio.run(seed_from_sqlite(args.sqlite, sync=args.sync))
     else:
-        asyncio.run(seed_from_json(args.json))
+        asyncio.run(seed_from_json(args.json, sync=args.sync))
 
 
 if __name__ == "__main__":

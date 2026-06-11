@@ -516,6 +516,18 @@
     "definition": {},
     "arguments": [
       {
+        "name": "slips",
+        "description": "Select slips",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "back_saver",
+            "fms"
+          ]
+        }
+      },
+      {
         "name": "dope",
         "description": "Select dope mode",
         "type": "string",
@@ -554,6 +566,18 @@
     "command": "trip_out_stand",
     "definition": {},
     "arguments": [
+      {
+        "name": "slips",
+        "description": "Select slips",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "back_saver",
+            "fms"
+          ]
+        }
+      },
       {
         "name": "mode",
         "description": "Dry, Wet",
