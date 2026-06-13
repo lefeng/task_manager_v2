@@ -12,6 +12,10 @@ To also update existing blueprints so the JSON file is the source of truth
 (arguments are reconciled by name — added, updated, and removed to match):
     python scripts/seed_blueprints.py --json /path/to/blueprints.json --sync
 
+To drop ALL existing blueprints and blueprint arguments first, then seed
+fresh from the file (destructive — the file becomes the only source of truth):
+    python scripts/seed_blueprints.py --json /path/to/blueprints.json --regenerate
+
 The JSON format expected:
 [
   {
@@ -38,7 +42,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 
 from core.config import settings
 from core.database import Base
@@ -102,8 +106,19 @@ def _sync_blueprint(existing: Blueprint, rec: dict) -> bool:
 
 
 async def seed_from_records(
-    session: AsyncSession, records: list[dict], sync: bool = False
+    session: AsyncSession,
+    records: list[dict],
+    sync: bool = False,
+    regenerate: bool = False,
 ) -> None:
+    if regenerate:
+        # Wipe in the same transaction as the inserts: if seeding fails the
+        # commit never happens and nothing is dropped. Arguments first, then
+        # blueprints (the FK has ON DELETE CASCADE, but be explicit).
+        await session.execute(delete(BlueprintArgument))
+        await session.execute(delete(Blueprint))
+        print("Regenerate: dropped all existing blueprints and arguments.")
+
     inserted = 0
     updated = 0
     skipped = 0
@@ -146,7 +161,9 @@ async def seed_from_records(
     print(f"\nDone. Inserted: {inserted}  Updated: {updated}  Skipped: {skipped}")
 
 
-async def seed_from_json(json_path: str, sync: bool = False) -> None:
+async def seed_from_json(
+    json_path: str, sync: bool = False, regenerate: bool = False
+) -> None:
     data = json.loads(Path(json_path).read_text())
     if isinstance(data, dict):
         data = data.get("blueprints", list(data.values()))
@@ -154,11 +171,13 @@ async def seed_from_json(json_path: str, sync: bool = False) -> None:
     engine = create_async_engine(settings.database_url, echo=False)
     Session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
     async with Session() as session:
-        await seed_from_records(session, data, sync=sync)
+        await seed_from_records(session, data, sync=sync, regenerate=regenerate)
     await engine.dispose()
 
 
-async def seed_from_sqlite(sqlite_path: str, sync: bool = False) -> None:
+async def seed_from_sqlite(
+    sqlite_path: str, sync: bool = False, regenerate: bool = False
+) -> None:
     import sqlite3
 
     conn = sqlite3.connect(sqlite_path)
@@ -213,7 +232,7 @@ async def seed_from_sqlite(sqlite_path: str, sync: bool = False) -> None:
     engine = create_async_engine(settings.database_url, echo=False)
     Session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
     async with Session() as session:
-        await seed_from_records(session, records, sync=sync)
+        await seed_from_records(session, records, sync=sync, regenerate=regenerate)
     await engine.dispose()
 
 
@@ -229,12 +248,22 @@ def main() -> None:
         action="store_true",
         help="Also update existing blueprints to match the source (upsert)",
     )
+    parser.add_argument(
+        "--regenerate",
+        action="store_true",
+        help="Drop ALL existing blueprints and arguments first, then seed "
+        "fresh from the source (destructive)",
+    )
     args = parser.parse_args()
 
     if args.sqlite:
-        asyncio.run(seed_from_sqlite(args.sqlite, sync=args.sync))
+        asyncio.run(
+            seed_from_sqlite(args.sqlite, sync=args.sync, regenerate=args.regenerate)
+        )
     else:
-        asyncio.run(seed_from_json(args.json, sync=args.sync))
+        asyncio.run(
+            seed_from_json(args.json, sync=args.sync, regenerate=args.regenerate)
+        )
 
 
 if __name__ == "__main__":

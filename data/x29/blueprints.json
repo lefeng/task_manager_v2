@@ -516,18 +516,6 @@
     "definition": {},
     "arguments": [
       {
-        "name": "slips",
-        "description": "Select slips",
-        "type": "string",
-        "ui": {
-          "type": "radio_button",
-          "options": [
-            "back_saver",
-            "fms"
-          ]
-        }
-      },
-      {
         "name": "dope",
         "description": "Select dope mode",
         "type": "string",
@@ -566,18 +554,6 @@
     "command": "trip_out_stand",
     "definition": {},
     "arguments": [
-      {
-        "name": "slips",
-        "description": "Select slips",
-        "type": "string",
-        "ui": {
-          "type": "radio_button",
-          "options": [
-            "back_saver",
-            "fms"
-          ]
-        }
-      },
       {
         "name": "mode",
         "description": "Dry, Wet",
@@ -692,6 +668,19 @@
             "off"
           ]
         }
+      },
+      {
+        "name": "option",
+        "description": "Make up option (1: wrench spin in and make up, 2: top drive spin in + wrench make up, 3: top drive only)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
       }
     ],
     "tags": [
@@ -702,33 +691,10 @@
     ]
   },
   {
-    "uuid": "dbf93a06-18bb-40c1-b127-f046bea321bf",
-    "description": "Step 1: Handle the bottom pipe",
+    "uuid": "42f115d4-816d-40ba-ae85-5653d8034722",
+    "description": "Build a full stand and deliver to racking board",
     "executor": "rig.build_stand",
-    "command": "handle_first_pipe",
-    "definition": {},
-    "arguments": [
-      {
-        "name": "serial_no",
-        "description": "Pipe Template ID",
-        "type": "int32",
-        "ui": {
-          "type": "input_field",
-          "options": []
-        }
-      }
-    ],
-    "tags": [
-      "iRacker",
-      "CatWalk",
-      "Wrench"
-    ]
-  },
-  {
-    "uuid": "b6313a80-4a5e-4c45-94b7-5e532d8143c1",
-    "description": "Step 2: Handle the middle pipe",
-    "executor": "rig.build_stand",
-    "command": "handle_second_pipe",
+    "command": "build_a_stand_to_racking_board",
     "definition": {},
     "arguments": [
       {
@@ -751,19 +717,31 @@
             "off"
           ]
         }
+      },
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
       }
     ],
     "tags": [
       "iRacker",
-      "CatWalk",
-      "Wrench"
+      "Wrench",
+      "CatWalk"
     ]
   },
   {
-    "uuid": "73a450be-1a8f-49d7-a650-40b737f98afc",
-    "description": "Step 3: Handle the top pipe",
+    "uuid": "776ed344-f91c-45f2-a1c2-5d156f7c0f7d",
+    "description": "Build a full stand and deliver to quill",
     "executor": "rig.build_stand",
-    "command": "handle_third_pipe",
+    "command": "build_a_stand_to_quill",
     "definition": {},
     "arguments": [
       {
@@ -786,33 +764,46 @@
             "off"
           ]
         }
+      },
+      {
+        "name": "option",
+        "description": "Make up option (1: wrench spin in and make up, 2: top drive spin in + wrench make up, 3: top drive only)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      },
+      {
+        "name": "need_break_out",
+        "description": "Select if top drive needs to break out the connection",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "true",
+            "false"
+          ]
+        }
       }
     ],
-    "tags": [
-      "iRacker",
-      "CatWalk",
-      "Wrench"
-    ]
-  },
-  {
-    "uuid": "1574b325-8e58-4ec2-abc3-644fc82bd478",
-    "description": "Step 4: Deliver new stand to racking board or well center",
-    "executor": "rig.build_stand",
-    "command": "deliver_new_stand",
-    "definition": {},
-    "arguments": [],
     "tags": [
       "DrillFloorArm",
       "iRacker",
       "Wrench",
-      "TopDrive"
+      "TopDrive",
+      "CatWalk"
     ]
   },
   {
-    "uuid": "28319e14-9035-4cbd-b4ab-417523ba24e0",
-    "description": "Build a full stand and deliver to racking board or well center",
+    "uuid": "19bfd755-5420-41db-a72a-e22b3507fb00",
+    "description": "Build a full stand and deliver to elevator",
     "executor": "rig.build_stand",
-    "command": "build_a_stand",
+    "command": "build_a_stand_to_elevator",
     "definition": {},
     "arguments": [
       {
@@ -843,6 +834,119 @@
       "Wrench",
       "TopDrive",
       "CatWalk"
+    ]
+  },
+  {
+    "uuid": "fdaef7b2-43f6-4433-9ce4-541bee74e7c4",
+    "description": "Build a full stand (decide where to deliver later)",
+    "executor": "rig.build_stand",
+    "command": "build_a_stand",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode. HWDP will always dope and regrip.",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "243101ce-25d6-4f92-97f0-6ec1fb22b745",
+    "description": "Deliver new stand to racking board",
+    "executor": "rig.build_stand",
+    "command": "deliver_new_stand_to_racking_board",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker"
+    ]
+  },
+  {
+    "uuid": "6df775fb-59b2-4a11-9048-f0156ab64212",
+    "description": "Deliver new stand to quill",
+    "executor": "rig.build_stand",
+    "command": "deliver_new_stand_to_quill",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "option",
+        "description": "Make up option (1: wrench spin in and make up, 2: top drive spin in + wrench make up, 3: top drive only)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      },
+      {
+        "name": "need_break_out",
+        "description": "Select if top drive needs to break out the connection",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "true",
+            "false"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
+    ]
+  },
+  {
+    "uuid": "e7fa5cb3-49f5-417d-8580-725ba3422874",
+    "description": "Deliver the new stand to elevator",
+    "executor": "rig.build_stand",
+    "command": "deliver_new_stand_to_elevator",
+    "definition": {},
+    "arguments": [],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive"
     ]
   },
   {
