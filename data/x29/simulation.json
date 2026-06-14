@@ -129,10 +129,10 @@
     ]
   },
   {
-    "uuid": "7269b69a-cb95-4c21-a175-25d5eca141eb",
-    "description": "Build a full stand and deliver to quill, elevator or racking board",
+    "uuid": "6eb68bd3-9ba6-4901-918a-1cc49cb16ef0",
+    "description": "Build a full stand and deliver to racking board",
     "executor": "rig.simulation",
-    "command": "build_a_stand",
+    "command": "build_a_stand_to_racking_board",
     "definition": {},
     "arguments": [
       {
@@ -157,21 +157,68 @@
         }
       },
       {
-        "name": "destination",
-        "description": "Select destination",
+        "name": "group_id",
+        "description": "Select which group (1 (ods stand), 2 (ds stand))",
         "type": "string",
         "ui": {
           "type": "radio_button",
           "options": [
-            "quill",
-            "elevator",
-            "racking_board"
+            "1",
+            "2"
+          ]
+        }
+      }
+    ],
+    "tags": [
+      "iRacker",
+      "Wrench",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "4904d7b8-bf68-487f-84ad-9c5da19bfede",
+    "description": "Build a full stand and deliver to quill",
+    "executor": "rig.simulation",
+    "command": "build_a_stand_to_quill",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
+      },
+      {
+        "name": "dope",
+        "description": "Select dope mode. HWDP will always dope and regrip.",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "on",
+            "off"
+          ]
+        }
+      },
+      {
+        "name": "option",
+        "description": "Make up option (1: wrench spin in and make up, 2: top drive spin in + wrench make up, 3: top drive only)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3"
           ]
         }
       },
       {
         "name": "need_break_out",
-        "description": "Top drive needs to break out if deliver to well center?",
+        "description": "Select if top drive needs to break out the connection",
         "type": "string",
         "ui": {
           "type": "radio_button",
@@ -180,16 +227,41 @@
             "false"
           ]
         }
+      }
+    ],
+    "tags": [
+      "DrillFloorArm",
+      "iRacker",
+      "Wrench",
+      "TopDrive",
+      "CatWalk"
+    ]
+  },
+  {
+    "uuid": "f861e9dd-de0a-4171-816a-1132d056acc9",
+    "description": "Build a full stand and deliver to elevator",
+    "executor": "rig.simulation",
+    "command": "build_a_stand_to_elevator",
+    "definition": {},
+    "arguments": [
+      {
+        "name": "serial_no",
+        "description": "Pipe Template ID",
+        "type": "int32",
+        "ui": {
+          "type": "input_field",
+          "options": []
+        }
       },
       {
-        "name": "group_id",
-        "description": "Select which group (1 (ods stand), 2 (ds stand)) if deliver to racking board",
+        "name": "dope",
+        "description": "Select dope mode. HWDP will always dope and regrip.",
         "type": "string",
         "ui": {
           "type": "radio_button",
           "options": [
-            "1",
-            "2"
+            "on",
+            "off"
           ]
         }
       }
