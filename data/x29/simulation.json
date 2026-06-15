@@ -119,6 +119,19 @@
             "off"
           ]
         }
+      },
+      {
+        "name": "option",
+        "description": "Make up option (1: wrench spin in and make up, 2: top drive spin in + wrench make up, 3: top drive only)",
+        "type": "string",
+        "ui": {
+          "type": "radio_button",
+          "options": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
       }
     ],
     "tags": [
